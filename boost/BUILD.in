@@ -1,0 +1,22 @@
+package(
+  default_visibility = [
+    "//visibility:public",
+  ],
+)
+
+cc_binary(
+  name = "boostdep",
+  srcs = ["boost/tools/boostdep/src/boostdep.cpp"],
+  deps = [
+    ":filesystem",
+  ],
+)
+
+# The following contents are auto generated.  DO NOT modify manually.
+
+# To generate boost modules dependencies, run
+# bazel build -c opt boost:boostdep
+# cd boost/boost
+# ../../bazel-bin/boost/boostdep --track-sources --list-dependencies \
+#   | ../generate_build.py | cat ../BUILD.in - > ../BUILD
+
