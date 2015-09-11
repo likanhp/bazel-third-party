@@ -253,7 +253,7 @@ cc_library(
     "boost/libs/bimap/include/**/*.hpp",
   ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+    ":bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   ]
 )
 
@@ -448,7 +448,6 @@ cc_library(
     ":assert",
     ":config",
     ":smart_ptr",
-    ":thread",
   ],
 )
 
@@ -471,6 +470,33 @@ cc_library(
     ":throw_exception",
     ":type_traits",
     ":typeof",
+  ],
+)
+
+cc_library(
+  name = "convert",
+  includes = [
+    "boost/libs/convert/include",
+  ],
+  hdrs = glob([
+    "boost/libs/convert/include/**/*.h",
+    "boost/libs/convert/include/**/*.hpp",
+  ]),
+  srcs = glob([
+    "boost/libs/convert/src/**",
+  ]),
+  deps = [
+    ":config",
+    ":core",
+    ":function_types",
+    ":lexical_cast",
+    ":math",
+    ":mpl",
+    ":optional",
+    ":parameter",
+    ":range",
+    ":spirit",
+    ":type_traits",
   ],
 )
 
@@ -513,7 +539,6 @@ cc_library(
     ":move",
     ":range",
     ":system",
-    ":thread",
     ":throw_exception",
     ":type_traits",
     ":utility",
@@ -584,7 +609,7 @@ cc_library(
     "boost/libs/disjoint_sets/include/**/*.hpp",
   ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+    ":bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   ]
 )
 
@@ -947,7 +972,7 @@ cc_library(
     "boost/libs/graph/include/**/*.hpp",
   ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+    ":bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   ]
 )
 
@@ -961,7 +986,7 @@ cc_library(
     "boost/libs/graph_parallel/include/**/*.hpp",
   ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+    ":bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   ]
 )
 
@@ -1251,9 +1276,7 @@ cc_library(
     ":function",
     ":iterator",
     ":smart_ptr",
-    ":thread",
     ":type_traits",
-    ":unordered",
   ],
 )
 
@@ -1298,10 +1321,9 @@ cc_library(
     "boost/libs/log/src/**",
   ]),
   deps = [
-    ":align",
     ":array",
-    ":asio",
     ":assert",
+    ":atomic",
     ":bind",
     ":config",
     ":core",
@@ -1311,7 +1333,6 @@ cc_library(
     ":function_types",
     ":fusion",
     ":intrusive",
-    ":io",
     ":iterator",
     ":lexical_cast",
     ":move",
@@ -1319,7 +1340,6 @@ cc_library(
     ":optional",
     ":parameter",
     ":phoenix",
-    ":predef",
     ":preprocessor",
     ":property_tree",
     ":proto",
@@ -1331,6 +1351,7 @@ cc_library(
     ":system",
     ":thread",
     ":throw_exception",
+    ":type_index",
     ":type_traits",
     ":utility",
     ":winapi",
@@ -1400,7 +1421,7 @@ cc_library(
     "boost/libs/mpi/include/**/*.hpp",
   ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+    ":bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   ]
 )
 
@@ -1685,9 +1706,20 @@ cc_library(
     "boost/libs/parameter/include/**/*.h",
     "boost/libs/parameter/include/**/*.hpp",
   ]),
+  srcs = glob([
+    "boost/libs/parameter/src/**",
+  ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
-  ]
+    ":config",
+    ":core",
+    ":detail",
+    ":mpl",
+    ":optional",
+    ":preprocessor",
+    ":python",
+    ":type_traits",
+    ":utility",
+  ],
 )
 
 cc_library(
@@ -1800,7 +1832,6 @@ cc_library(
   ]),
   deps = [
     ":any",
-    ":bind",
     ":config",
     ":core",
     ":detail",
@@ -1810,7 +1841,6 @@ cc_library(
     ":smart_ptr",
     ":static_assert",
     ":throw_exception",
-    ":tokenizer",
     ":type_traits",
   ],
 )
@@ -1825,7 +1855,7 @@ cc_library(
     "boost/libs/property_map/include/**/*.hpp",
   ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+    ":bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   ]
 )
 
@@ -1844,14 +1874,16 @@ cc_library(
   deps = [
     ":any",
     ":assert",
+    ":bind",
     ":config",
     ":core",
+    ":format",
     ":iterator",
     ":mpl",
     ":multi_index",
     ":optional",
+    ":range",
     ":serialization",
-    ":spirit",
     ":static_assert",
     ":throw_exception",
     ":type_traits",
@@ -1924,9 +1956,28 @@ cc_library(
     "boost/libs/python/include/**/*.h",
     "boost/libs/python/include/**/*.hpp",
   ]),
+  srcs = glob([
+    "boost/libs/python/src/**",
+  ]),
   deps = [
-    ":bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
-  ]
+    ":bind",
+    ":config",
+    ":conversion",
+    ":core",
+    ":detail",
+    ":foreach",
+    ":function",
+    ":iterator",
+    ":lexical_cast",
+    ":mpl",
+    ":numeric_conversion",
+    ":preprocessor",
+    ":smart_ptr",
+    ":static_assert",
+    ":tuple",
+    ":type_traits",
+    ":utility",
+  ],
 )
 
 cc_library(
@@ -2150,7 +2201,6 @@ cc_library(
     ":predef",
     ":preprocessor",
     ":smart_ptr",
-    ":throw_exception",
     ":tuple",
     ":type_traits",
     ":variant",
@@ -2299,6 +2349,7 @@ cc_library(
     ":core",
     ":detail",
     ":exception",
+    ":function",
     ":io",
     ":iterator",
     ":lexical_cast",
@@ -2362,9 +2413,7 @@ cc_library(
     ":chrono",
     ":config",
     ":core",
-    ":io",
     ":system",
-    ":throw_exception",
   ],
 )
 
@@ -2507,7 +2556,6 @@ cc_library(
   deps = [
     ":config",
     ":core",
-    ":functional",
     ":mpl",
     ":preprocessor",
     ":static_assert",
@@ -2630,6 +2678,7 @@ cc_library(
   deps = [
     ":assert",
     ":config",
+    ":core",
     ":io",
     ":iterator",
     ":random",
@@ -2638,6 +2687,7 @@ cc_library(
     ":static_assert",
     ":throw_exception",
     ":type_traits",
+    ":winapi",
   ],
 )
 
@@ -2760,16 +2810,14 @@ cc_library(
 )
 
 cc_library(
-  name = "bimap_disjoint_sets_graph_graph_parallel_mpi_parameter_property_map_python",
+  name = "bimap_disjoint_sets_graph_graph_parallel_mpi_property_map",
   includes = [
     "boost/libs/bimap/include",
     "boost/libs/disjoint_sets/include",
     "boost/libs/graph/include",
     "boost/libs/graph_parallel/include",
     "boost/libs/mpi/include",
-    "boost/libs/parameter/include",
     "boost/libs/property_map/include",
-    "boost/libs/python/include",
   ],
   hdrs = glob([
     "boost/libs/bimap/include/**/*.h",
@@ -2782,12 +2830,8 @@ cc_library(
     "boost/libs/graph_parallel/include/**/*.hpp",
     "boost/libs/mpi/include/**/*.h",
     "boost/libs/mpi/include/**/*.hpp",
-    "boost/libs/parameter/include/**/*.h",
-    "boost/libs/parameter/include/**/*.hpp",
     "boost/libs/property_map/include/**/*.h",
     "boost/libs/property_map/include/**/*.hpp",
-    "boost/libs/python/include/**/*.h",
-    "boost/libs/python/include/**/*.hpp",
   ]),
   srcs = glob([
     "boost/libs/bimap/src/**",
@@ -2795,9 +2839,7 @@ cc_library(
     "boost/libs/graph/src/**",
     "boost/libs/graph_parallel/src/**",
     "boost/libs/mpi/src/**",
-    "boost/libs/parameter/src/**",
     "boost/libs/property_map/src/**",
-    "boost/libs/python/src/**",
   ]),
   deps = [
     ":algorithm",
@@ -2823,13 +2865,13 @@ cc_library(
     ":move",
     ":mpl",
     ":multi_index",
-    ":numeric_conversion",
     ":optional",
+    ":parameter",
     ":preprocessor",
     ":property_tree",
+    ":python",
     ":random",
     ":range",
-    ":regex",
     ":serialization",
     ":smart_ptr",
     ":spirit",
@@ -2890,6 +2932,7 @@ cc_library(
     ":container",
     ":core",
     ":detail",
+    ":endian",
     ":exception",
     ":filesystem",
     ":foreach",
@@ -2903,6 +2946,7 @@ cc_library(
     ":iostreams",
     ":iterator",
     ":lexical_cast",
+    ":locale",
     ":math",
     ":move",
     ":mpl",
@@ -2968,6 +3012,7 @@ cc_library(
     ":throw_exception",
     ":tuple",
     ":type_traits",
+    ":utility",
   ],
   visibility = [
     "//visibility:private",
