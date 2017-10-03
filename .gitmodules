@@ -10,3 +10,6 @@
 [submodule "py/glog/glog"]
 	path = py/glog/glog
 	url = https://github.com/benley/python-glog.git
+[submodule "xz/xz"]
+	path = xz/xz
+	url = https://git.tukaani.org/xz.git
