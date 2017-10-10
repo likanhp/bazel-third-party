@@ -7,3 +7,6 @@
 [submodule "py/gflags/gflags"]
 	path = py/gflags/gflags
 	url = https://github.com/google/python-gflags.git
+[submodule "py/glog/glog"]
+	path = py/glog/glog
+	url = https://github.com/benley/python-glog.git
