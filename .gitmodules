@@ -1,3 +1,6 @@
 [submodule "zlib/zlib"]
 	path = zlib/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "py/six/six"]
+	path = py/six/six
+	url = https://github.com/benjaminp/six.git
