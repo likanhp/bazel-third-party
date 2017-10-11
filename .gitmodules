@@ -4,3 +4,6 @@
 [submodule "py/six/six"]
 	path = py/six/six
 	url = https://github.com/benjaminp/six.git
+[submodule "py/gflags/gflags"]
+	path = py/gflags/gflags
+	url = https://github.com/google/python-gflags.git
