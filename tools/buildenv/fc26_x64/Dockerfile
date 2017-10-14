@@ -18,13 +18,14 @@ RUN dnf install -y autoconf \
 RUN dnf copr enable -y vbatts/bazel
 RUN dnf install -y bazel
 
-RUN useradd -m -s /bin/bash likan
-RUN mkdir -p /etc/sudoers.d && echo 'likan	ALL=NOPASSWD:	ALL' > /etc/sudoers.d/likan
+ARG user=likan
 
-USER likan:likan
-WORKDIR /home/likan
+RUN useradd -m -s /bin/bash ${user}
+RUN mkdir -p /etc/sudoers.d && echo "${user} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${user}
 
-RUN git config --global user.email 'likan999@users.noreply.github.com' && \
-    git config --global user.name 'Kan Li'
+USER ${user}:${user}
+WORKDIR /home/${user}
 
-RUN git clone --recursive https://github.com/likanhp/bazel-third-party.git
+ARG checkout=1
+
+RUN if [ ${checkout} -gt 0 ]; then git clone --recursive https://github.com/likanhp/bazel-third-party.git; fi

@@ -21,14 +21,15 @@ bazel-0.6.1/bazel-0.6.1-without-jdk-installer-linux-x86.sh' \
         -O /tmp/install.sh --progress=dot:mega && \
     bash /tmp/install.sh && rm /tmp/install.sh
 
-RUN useradd -m -s /bin/bash likan
-RUN mkdir -p /etc/sudoers.d && echo 'likan	ALL=NOPASSWD:	ALL' > /etc/sudoers.d/likan
+ARG user=likan
 
-USER likan:likan
-WORKDIR /home/likan
+RUN useradd -m -s /bin/bash ${user}
+RUN mkdir -p /etc/sudoers.d && echo "${user} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${user}
+
+USER ${user}:${user}
+WORKDIR /home/${user}
 ENTRYPOINT ["/usr/bin/linux32", "--"]
 
-RUN git config --global user.email 'likan999@users.noreply.github.com' && \
-    git config --global user.name 'Kan Li'
+ARG checkout=1
 
-RUN git clone --recursive https://github.com/likanhp/bazel-third-party.git
+RUN if [ ${checkout} -gt 0 ]; then git clone --recursive https://github.com/likanhp/bazel-third-party.git; fi
