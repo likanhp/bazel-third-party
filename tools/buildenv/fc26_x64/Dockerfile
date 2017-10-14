@@ -27,4 +27,4 @@ WORKDIR /home/likan
 RUN git config --global user.email 'likan999@users.noreply.github.com' && \
     git config --global user.name 'Kan Li'
 
-RUN git clone --recursive https://github.com/likan999/bazel-third-party.git
+RUN git clone --recursive https://github.com/likanhp/bazel-third-party.git
