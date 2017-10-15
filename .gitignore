@@ -1,3 +1,6 @@
 bazel-*
 .*
+!.bazelrc
+!.bazelrc.travis
 !.gitignore
+!.travis.yml

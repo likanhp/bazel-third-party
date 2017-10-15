@@ -1,0 +1,5 @@
+startup --host_jvm_args=-Xmx1g
+startup --host_jvm_args=-Xms1g
+startup --batch
+
+build --verbose_failures

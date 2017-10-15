@@ -1,0 +1,61 @@
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode8.3
+      env: USE_DOCKER=no
+    - os: osx
+      osx_image: xcode9.1
+      env: USE_DOCKER=no
+    - os: linux
+      dist: trusty
+      env: USE_DOCKER=no
+      jdk: oraclejdk8
+      addons:
+        apt:
+          sources:
+            - sourceline: "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8"
+              key_url: "https://bazel.build/bazel-release.pub.gpg"
+          packages:
+            - bazel
+    - os: linux
+      dist: trusty
+      env: USE_DOCKER=yes ARCH=x86
+      services:
+        - docker
+    - os: linux
+      dist: trusty
+      env: USE_DOCKER=yes ARCH=x64
+      services:
+        - docker
+
+sudo: required
+
+cache:
+  directories:
+    - "${HOME}/bazel_output_base"
+
+before_install:
+  - if [[ "${TRAVIS_OS_NAME}" == osx ]]; then brew update; fi
+
+install:
+  - >
+    if [[ "${TRAVIS_OS_NAME}" == osx ]]; then
+      brew install bazel && { brew outdated bazel || brew upgrade bazel; }
+    fi
+
+before_script:
+  - cat "${TRAVIS_BUILD_DIR}"/.bazelrc{.travis,} > "${TRAVIS_BUILD_DIR}"/.bazelrc.ci
+  - mv "${TRAVIS_BUILD_DIR}"/.bazelrc.{ci,}
+
+script:
+  - >
+    if [[ "${USE_DOCKER}" == yes ]]; then
+      case "${TRAVIS_OS_NAME}-${ARCH}" in
+        linux-x86) _image=likan/buildenv:ubuntu17.10_x86_travis;;
+        linux-x64) _image=likan/buildenv:fc26_x64_travis;;
+      esac
+      docker run -v "${PWD}:/project" -v "${HOME}/bazel_output_base:/bazel_output_base" \
+        "${_image}" bash -c "cd /project && sudo bazel --output_base=/bazel_output_base build //..."
+    else
+      bazel --output_base="${HOME}/bazel_output_base" build //...;
+    fi
