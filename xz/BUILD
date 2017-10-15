@@ -31,6 +31,82 @@ cc_library(
     ],
 )
 
+cc_binary(
+    name = "lzmainfo",
+    srcs = [
+        "xz/src/common/tuklib_exit.c",
+        "xz/src/common/tuklib_exit.h",
+        "xz/src/common/tuklib_gettext.h",
+        "xz/src/common/tuklib_progname.c",
+        "xz/src/common/tuklib_progname.h",
+        "xz/src/lzmainfo/lzmainfo.c",
+    ],
+    copts = [
+        "-std=c99",
+        "-DHAVE_CONFIG_H",
+        "-isystem",
+        "$(GENDIR)/xz",
+        "-Ixz/xz/src/common",
+        "-Ixz/xz/src/liblzma/api",
+    ],
+    deps = [
+        ":impl",
+    ],
+)
+
+cc_binary(
+    name = "xz",
+    srcs = [
+        "xz/src/common/tuklib_exit.c",
+        "xz/src/common/tuklib_exit.h",
+        "xz/src/common/tuklib_gettext.h",
+        "xz/src/common/tuklib_mbstr.h",
+        "xz/src/common/tuklib_mbstr_fw.c",
+        "xz/src/common/tuklib_mbstr_width.c",
+        "xz/src/common/tuklib_open_stdxxx.c",
+        "xz/src/common/tuklib_open_stdxxx.h",
+        "xz/src/common/tuklib_progname.c",
+        "xz/src/common/tuklib_progname.h",
+    ] + glob([
+        "xz/src/xz/*.c",
+        "xz/src/xz/*.h",
+    ]),
+    copts = [
+        "-std=c99",
+        "-DHAVE_CONFIG_H",
+        "-isystem",
+        "$(GENDIR)/xz",
+        "-Ixz/xz/src/common",
+        "-Ixz/xz/src/liblzma/api",
+    ],
+    deps = [
+        ":impl",
+    ],
+)
+
+cc_binary(
+    name = "xzdec",
+    srcs = [
+        "xz/src/common/tuklib_exit.c",
+        "xz/src/common/tuklib_exit.h",
+        "xz/src/common/tuklib_gettext.h",
+        "xz/src/common/tuklib_progname.c",
+        "xz/src/common/tuklib_progname.h",
+        "xz/src/xzdec/xzdec.c",
+    ],
+    copts = [
+        "-std=c99",
+        "-DHAVE_CONFIG_H",
+        "-isystem",
+        "$(GENDIR)/xz",
+        "-Ixz/xz/src/common",
+        "-Ixz/xz/src/liblzma/api",
+    ],
+    deps = [
+        ":impl",
+    ],
+)
+
 autoconf(
     name = "generate_config_h",
     out = "config.h",
@@ -44,9 +120,13 @@ cc_library(
     name = "impl",
     srcs = [
         "config.h",
+        "xz/src/common/tuklib_config.h",
+        "xz/src/common/tuklib_cpucores.c",
+        "xz/src/common/tuklib_cpucores.h",
+        "xz/src/common/tuklib_physmem.c",
+        "xz/src/common/tuklib_physmem.h",
     ] + glob(
         [
-            "xz/src/common/*.c",
             "xz/src/liblzma/**/*.c",
             "xz/src/liblzma/**/*.h",
         ],
@@ -71,8 +151,12 @@ cc_library(
             ],
         },
     ),
-    hdrs = glob([
-        "xz/src/common/*.h",
+    hdrs = [
+        "xz/src/common/mythread.h",
+        "xz/src/common/sysdefs.h",
+        "xz/src/common/tuklib_common.h",
+        "xz/src/common/tuklib_integer.h",
+    ] + glob([
         "xz/src/liblzma/api/**/*.h",
     ]),
     copts = [
@@ -90,6 +174,13 @@ cc_library(
         "-Ixz/xz/src/liblzma/rangecoder",
         "-Ixz/xz/src/liblzma/simple",
     ],
+    linkopts = select(
+        apple([]) + {
+            "//conditions:default": [
+                "-pthread",
+            ],
+        },
+    ),
     visibility = [
         "//visibility:private",
     ],
