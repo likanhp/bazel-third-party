@@ -31,6 +31,15 @@ cc_library(
     ],
 )
 
+BINARY_COPTS = [
+    "-std=c99",
+    "-DHAVE_CONFIG_H",
+    "-isystem",
+    "$(GENDIR)/xz",
+    "-Ixz/xz/src/common",
+    "-Ixz/xz/src/liblzma/api",
+]
+
 cc_binary(
     name = "lzmainfo",
     srcs = [
@@ -41,14 +50,7 @@ cc_binary(
         "xz/src/common/tuklib_progname.h",
         "xz/src/lzmainfo/lzmainfo.c",
     ],
-    copts = [
-        "-std=c99",
-        "-DHAVE_CONFIG_H",
-        "-isystem",
-        "$(GENDIR)/xz",
-        "-Ixz/xz/src/common",
-        "-Ixz/xz/src/liblzma/api",
-    ],
+    copts = BINARY_COPTS,
     deps = [
         ":impl",
     ],
@@ -71,14 +73,7 @@ cc_binary(
         "xz/src/xz/*.c",
         "xz/src/xz/*.h",
     ]),
-    copts = [
-        "-std=c99",
-        "-DHAVE_CONFIG_H",
-        "-isystem",
-        "$(GENDIR)/xz",
-        "-Ixz/xz/src/common",
-        "-Ixz/xz/src/liblzma/api",
-    ],
+    copts = BINARY_COPTS,
     deps = [
         ":impl",
     ],
@@ -94,14 +89,7 @@ cc_binary(
         "xz/src/common/tuklib_progname.h",
         "xz/src/xzdec/xzdec.c",
     ],
-    copts = [
-        "-std=c99",
-        "-DHAVE_CONFIG_H",
-        "-isystem",
-        "$(GENDIR)/xz",
-        "-Ixz/xz/src/common",
-        "-Ixz/xz/src/liblzma/api",
-    ],
+    copts = BINARY_COPTS,
     deps = [
         ":impl",
     ],
@@ -159,13 +147,7 @@ cc_library(
     ] + glob([
         "xz/src/liblzma/api/**/*.h",
     ]),
-    copts = [
-        "-std=c99",
-        "-DHAVE_CONFIG_H",
-        "-isystem",
-        "$(GENDIR)/xz",
-        "-Ixz/xz/src/common",
-        "-Ixz/xz/src/liblzma/api",
+    copts = BINARY_COPTS + [
         "-Ixz/xz/src/liblzma/check",
         "-Ixz/xz/src/liblzma/common",
         "-Ixz/xz/src/liblzma/delta",
