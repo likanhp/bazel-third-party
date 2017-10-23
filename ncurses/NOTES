@@ -1,0 +1,304 @@
+The following dependencies are collected from Makefiles. Convert them to source
+list using:
+for f in $(head -n $end_line < NOTES | tail +$start_line |
+           sed 's/^.*\///g; s/\$o.*/\.'"$suffix"'/g'); do
+  find gen ncurses -name $f; done | sed 's/^/        "/; s/$/",/g'
+done
+
+
+tic:
+NORMAL_P_OBJS = \
+	../objects/alloc_entry$o \
+	../objects/captoinfo$o \
+	../objects/comp_expand$o \
+	../objects/comp_parse$o \
+	../objects/comp_scan$o \
+	../objects/parse_entry$o \
+	../objects/write_entry$o
+
+$(NORMAL_P_OBJS) : ../include/ncurses_cfg.h ${srcdir}/curses.priv.h
+
+
+tinfo:
+NORMAL_T_OBJS = \
+	../objects/access$o \
+	../objects/add_tries$o \
+	../objects/alloc_ttype$o \
+	../objects/codes$o \
+	../objects/comp_captab$o \
+	../objects/comp_error$o \
+	../objects/comp_hash$o \
+	../objects/db_iterator$o \
+	../objects/doalloc$o \
+	../objects/entries$o \
+	../objects/fallback$o \
+	../objects/free_ttype$o \
+	../objects/getenv_num$o \
+	../objects/home_terminfo$o \
+	../objects/init_keytry$o \
+	../objects/lib_acs$o \
+	../objects/lib_baudrate$o \
+	../objects/lib_cur_term$o \
+	../objects/lib_data$o \
+	../objects/lib_has_cap$o \
+	../objects/lib_kernel$o \
+	../objects/lib_keyname$o \
+	../objects/lib_longname$o \
+	../objects/lib_napms$o \
+	../objects/lib_options$o \
+	../objects/lib_raw$o \
+	../objects/lib_setup$o \
+	../objects/lib_termcap$o \
+	../objects/lib_termname$o \
+	../objects/lib_tgoto$o \
+	../objects/lib_ti$o \
+	../objects/lib_tparm$o \
+	../objects/lib_tputs$o \
+	../objects/lib_trace$o \
+	../objects/lib_ttyflags$o \
+	../objects/lib_twait$o \
+	../objects/name_match$o \
+	../objects/names$o \
+	../objects/obsolete$o \
+	../objects/read_entry$o \
+	../objects/read_termcap$o \
+	../objects/strings$o \
+	../objects/tries$o \
+	../objects/trim_sgr0$o \
+	../objects/unctrl$o \
+	../objects/visbuf$o \
+	../objects/define_key$o \
+	../objects/hashed_db$o \
+	../objects/key_defined$o \
+	../objects/keybound$o \
+	../objects/keyok$o \
+	../objects/version$o
+
+$(NORMAL_T_OBJS) : ../include/ncurses_cfg.h ${srcdir}/curses.priv.h
+
+
+ncursesw:
+NORMAL_OBJS = \
+	../objects/hardscroll$o \
+	../objects/hashmap$o \
+	../objects/lib_addch$o \
+	../objects/lib_addstr$o \
+	../objects/lib_beep$o \
+	../objects/lib_bkgd$o \
+	../objects/lib_box$o \
+	../objects/lib_chgat$o \
+	../objects/lib_clear$o \
+	../objects/lib_clearok$o \
+	../objects/lib_clrbot$o \
+	../objects/lib_clreol$o \
+	../objects/lib_color$o \
+	../objects/lib_colorset$o \
+	../objects/lib_delch$o \
+	../objects/lib_delwin$o \
+	../objects/lib_echo$o \
+	../objects/lib_endwin$o \
+	../objects/lib_erase$o \
+	../objects/lib_flash$o \
+	../objects/lib_gen$o \
+	../objects/lib_getch$o \
+	../objects/lib_getstr$o \
+	../objects/lib_hline$o \
+	../objects/lib_immedok$o \
+	../objects/lib_inchstr$o \
+	../objects/lib_initscr$o \
+	../objects/lib_insch$o \
+	../objects/lib_insdel$o \
+	../objects/lib_insnstr$o \
+	../objects/lib_instr$o \
+	../objects/lib_isendwin$o \
+	../objects/lib_leaveok$o \
+	../objects/lib_mouse$o \
+	../objects/lib_move$o \
+	../objects/lib_mvcur$o \
+	../objects/lib_mvwin$o \
+	../objects/lib_newterm$o \
+	../objects/lib_newwin$o \
+	../objects/lib_nl$o \
+	../objects/lib_overlay$o \
+	../objects/lib_pad$o \
+	../objects/lib_printw$o \
+	../objects/lib_redrawln$o \
+	../objects/lib_refresh$o \
+	../objects/lib_restart$o \
+	../objects/lib_scanw$o \
+	../objects/lib_screen$o \
+	../objects/lib_scroll$o \
+	../objects/lib_scrollok$o \
+	../objects/lib_scrreg$o \
+	../objects/lib_set_term$o \
+	../objects/lib_slk$o \
+	../objects/lib_slkatr_set$o \
+	../objects/lib_slkatrof$o \
+	../objects/lib_slkatron$o \
+	../objects/lib_slkatrset$o \
+	../objects/lib_slkattr$o \
+	../objects/lib_slkclear$o \
+	../objects/lib_slkcolor$o \
+	../objects/lib_slkinit$o \
+	../objects/lib_slklab$o \
+	../objects/lib_slkrefr$o \
+	../objects/lib_slkset$o \
+	../objects/lib_slktouch$o \
+	../objects/lib_touch$o \
+	../objects/lib_tstp$o \
+	../objects/lib_ungetch$o \
+	../objects/lib_vidattr$o \
+	../objects/lib_vline$o \
+	../objects/lib_wattroff$o \
+	../objects/lib_wattron$o \
+	../objects/lib_winch$o \
+	../objects/lib_window$o \
+	../objects/nc_panel$o \
+	../objects/safe_sprintf$o \
+	../objects/tty_update$o \
+	../objects/varargs$o \
+	../objects/vsscanf$o \
+	../objects/lib_freeall$o \
+	../objects/charable$o \
+	../objects/lib_add_wch$o \
+	../objects/lib_box_set$o \
+	../objects/lib_cchar$o \
+	../objects/lib_erasewchar$o \
+	../objects/lib_get_wch$o \
+	../objects/lib_get_wstr$o \
+	../objects/lib_hline_set$o \
+	../objects/lib_in_wch$o \
+	../objects/lib_in_wchnstr$o \
+	../objects/lib_ins_wch$o \
+	../objects/lib_inwstr$o \
+	../objects/lib_key_name$o \
+	../objects/lib_pecho_wchar$o \
+	../objects/lib_slk_wset$o \
+	../objects/lib_unget_wch$o \
+	../objects/lib_vid_attr$o \
+	../objects/lib_vline_set$o \
+	../objects/lib_wacs$o \
+	../objects/lib_wunctrl$o \
+	../objects/expanded$o \
+	../objects/legacy_coding$o \
+	../objects/lib_dft_fgbg$o \
+	../objects/lib_print$o \
+	../objects/resizeterm$o \
+	../objects/use_screen$o \
+	../objects/use_window$o \
+	../objects/wresize$o
+
+$(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/curses.priv.h
+
+
+formw:
+NORMAL_OBJS = \
+	../objects/fld_arg$o \
+	../objects/fld_attr$o \
+	../objects/fld_current$o \
+	../objects/fld_def$o \
+	../objects/fld_dup$o \
+	../objects/fld_ftchoice$o \
+	../objects/fld_ftlink$o \
+	../objects/fld_info$o \
+	../objects/fld_just$o \
+	../objects/fld_link$o \
+	../objects/fld_max$o \
+	../objects/fld_move$o \
+	../objects/fld_newftyp$o \
+	../objects/fld_opts$o \
+	../objects/fld_pad$o \
+	../objects/fld_page$o \
+	../objects/fld_stat$o \
+	../objects/fld_type$o \
+	../objects/fld_user$o \
+	../objects/frm_cursor$o \
+	../objects/frm_data$o \
+	../objects/frm_def$o \
+	../objects/frm_driver$o \
+	../objects/frm_hook$o \
+	../objects/frm_opts$o \
+	../objects/frm_page$o \
+	../objects/frm_post$o \
+	../objects/frm_req_name$o \
+	../objects/frm_scale$o \
+	../objects/frm_sub$o \
+	../objects/frm_user$o \
+	../objects/frm_win$o \
+	../objects/fty_alnum$o \
+	../objects/fty_alpha$o \
+	../objects/fty_enum$o \
+	../objects/fty_generic$o \
+	../objects/fty_int$o \
+	../objects/fty_ipv4$o \
+	../objects/fty_num$o \
+	../objects/fty_regex$o
+
+$(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/form.priv.h
+
+
+menu:
+NORMAL_OBJS = \
+	../objects/m_attribs$o \
+	../objects/m_cursor$o \
+	../objects/m_driver$o \
+	../objects/m_format$o \
+	../objects/m_global$o \
+	../objects/m_hook$o \
+	../objects/m_item_cur$o \
+	../objects/m_item_nam$o \
+	../objects/m_item_new$o \
+	../objects/m_item_opt$o \
+	../objects/m_item_top$o \
+	../objects/m_item_use$o \
+	../objects/m_item_val$o \
+	../objects/m_item_vis$o \
+	../objects/m_items$o \
+	../objects/m_new$o \
+	../objects/m_opts$o \
+	../objects/m_pad$o \
+	../objects/m_pattern$o \
+	../objects/m_post$o \
+	../objects/m_req_name$o \
+	../objects/m_scale$o \
+	../objects/m_spacing$o \
+	../objects/m_sub$o \
+	../objects/m_userptr$o \
+	../objects/m_win$o
+
+$(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/menu.priv.h
+
+
+NORMAL_OBJS = \
+	../objects/panel$o \
+	../objects/p_above$o \
+	../objects/p_below$o \
+	../objects/p_bottom$o \
+	../objects/p_delete$o \
+	../objects/p_hide$o \
+	../objects/p_hidden$o \
+	../objects/p_move$o \
+	../objects/p_new$o \
+	../objects/p_replace$o \
+	../objects/p_show$o \
+	../objects/p_top$o \
+	../objects/p_update$o \
+	../objects/p_user$o \
+	../objects/p_win$o
+
+$(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/panel.priv.h
+
+
+ncurses++
+NORMAL_OBJS = \
+	../objects/cursesf$o \
+	../objects/cursesm$o \
+	../objects/cursesw$o \
+	../objects/cursespad$o \
+	../objects/cursesp$o \
+	../objects/cursslk$o \
+	../objects/cursesapp$o \
+	../objects/cursesmain$o
+
+$(NORMAL_OBJS) : ../include/ncurses_cfg.h
+
