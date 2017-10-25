@@ -13,3 +13,6 @@
 [submodule "xz/xz"]
 	path = xz/xz
 	url = https://git.tukaani.org/xz.git
+[submodule "readline/readline"]
+	path = readline/readline
+	url = git://git.savannah.gnu.org/readline.git
