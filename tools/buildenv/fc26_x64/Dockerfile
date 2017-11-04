@@ -1,6 +1,6 @@
 #!/usr/bin/env docker build . -t likan/buildenv:fc26_x64 -f
 
-FROM fedora:26
+FROM registry.fedoraproject.org/fedora:26
 
 RUN dnf update -y
 
@@ -11,6 +11,7 @@ RUN dnf install -y autoconf \
                    gettext-devel \
                    git \
                    libtool \
+                   pkg-config \
                    python2-pip \
                    sudo \
                    wget

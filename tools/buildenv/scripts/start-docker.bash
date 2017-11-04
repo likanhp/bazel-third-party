@@ -77,8 +77,16 @@ function __buildenv_export() {
       "${output_root}/${lib}_install_tree.${_variant}" ||
       { echo "${lib} failed to clean up output directories" >&2; return 1; };
     docker cp "${container_id}:/tmp/${lib}_build_tree.${_variant}" "${output_root}" ||
+      { rm -rf "${output_root}/${lib}_build_tree.${_variant}" &&
+        docker exec "${container_id}" bash -c \
+          "tar -cf - -C /tmp ${lib}_build_tree.${_variant}" |
+        tar -xpf - -C "${output_root}"; } ||
       { echo "${lib} failed to export build tree" >&2; return 1; };
     docker cp "${container_id}:/tmp/${lib}_install_tree.${_variant}" "${output_root}" ||
+      { rm -rf "${output_root}/${lib}_install_tree.${_variant}" &&
+        docker exec "${container_id}" bash -c \
+          "tar -cf - -C /tmp ${lib}_install_tree.${_variant}" >
+        "${output_root}/${lib}_install_tree.${_variant}.tar"; } ||
       { echo "${lib} failed to export install tree" >&2; return 1; };
   done;
 };

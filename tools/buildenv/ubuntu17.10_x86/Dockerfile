@@ -11,6 +11,7 @@ RUN apt install -y autoconf \
                    git \
                    libtool \
                    openjdk-8-jdk \
+                   pkg-config \
                    python-pip \
                    sudo \
                    wget \
