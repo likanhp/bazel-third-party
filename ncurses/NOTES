@@ -3,78 +3,7 @@ list using:
 for f in $(head -n $end_line < NOTES | tail +$start_line |
            sed 's/^.*\///g; s/\$o.*/\.'"$suffix"'/g'); do
   find gen ncurses -name $f; done | sed 's/^/        "/; s/$/",/g'
-done
-
-
-tic:
-NORMAL_P_OBJS = \
-	../objects/alloc_entry$o \
-	../objects/captoinfo$o \
-	../objects/comp_expand$o \
-	../objects/comp_parse$o \
-	../objects/comp_scan$o \
-	../objects/parse_entry$o \
-	../objects/write_entry$o
-
-$(NORMAL_P_OBJS) : ../include/ncurses_cfg.h ${srcdir}/curses.priv.h
-
-
-tinfo:
-NORMAL_T_OBJS = \
-	../objects/access$o \
-	../objects/add_tries$o \
-	../objects/alloc_ttype$o \
-	../objects/codes$o \
-	../objects/comp_captab$o \
-	../objects/comp_error$o \
-	../objects/comp_hash$o \
-	../objects/db_iterator$o \
-	../objects/doalloc$o \
-	../objects/entries$o \
-	../objects/fallback$o \
-	../objects/free_ttype$o \
-	../objects/getenv_num$o \
-	../objects/home_terminfo$o \
-	../objects/init_keytry$o \
-	../objects/lib_acs$o \
-	../objects/lib_baudrate$o \
-	../objects/lib_cur_term$o \
-	../objects/lib_data$o \
-	../objects/lib_has_cap$o \
-	../objects/lib_kernel$o \
-	../objects/lib_keyname$o \
-	../objects/lib_longname$o \
-	../objects/lib_napms$o \
-	../objects/lib_options$o \
-	../objects/lib_raw$o \
-	../objects/lib_setup$o \
-	../objects/lib_termcap$o \
-	../objects/lib_termname$o \
-	../objects/lib_tgoto$o \
-	../objects/lib_ti$o \
-	../objects/lib_tparm$o \
-	../objects/lib_tputs$o \
-	../objects/lib_trace$o \
-	../objects/lib_ttyflags$o \
-	../objects/lib_twait$o \
-	../objects/name_match$o \
-	../objects/names$o \
-	../objects/obsolete$o \
-	../objects/read_entry$o \
-	../objects/read_termcap$o \
-	../objects/strings$o \
-	../objects/tries$o \
-	../objects/trim_sgr0$o \
-	../objects/unctrl$o \
-	../objects/visbuf$o \
-	../objects/define_key$o \
-	../objects/hashed_db$o \
-	../objects/key_defined$o \
-	../objects/keybound$o \
-	../objects/keyok$o \
-	../objects/version$o
-
-$(NORMAL_T_OBJS) : ../include/ncurses_cfg.h ${srcdir}/curses.priv.h
+done | sort
 
 
 ncursesw:
@@ -186,7 +115,66 @@ NORMAL_OBJS = \
 	../objects/resizeterm$o \
 	../objects/use_screen$o \
 	../objects/use_window$o \
-	../objects/wresize$o
+	../objects/wresize$o \
+	../objects/access$o \
+	../objects/add_tries$o \
+	../objects/alloc_ttype$o \
+	../objects/codes$o \
+	../objects/comp_captab$o \
+	../objects/comp_error$o \
+	../objects/comp_hash$o \
+	../objects/db_iterator$o \
+	../objects/doalloc$o \
+	../objects/entries$o \
+	../objects/fallback$o \
+	../objects/free_ttype$o \
+	../objects/getenv_num$o \
+	../objects/home_terminfo$o \
+	../objects/init_keytry$o \
+	../objects/lib_acs$o \
+	../objects/lib_baudrate$o \
+	../objects/lib_cur_term$o \
+	../objects/lib_data$o \
+	../objects/lib_has_cap$o \
+	../objects/lib_kernel$o \
+	../objects/lib_keyname$o \
+	../objects/lib_longname$o \
+	../objects/lib_napms$o \
+	../objects/lib_options$o \
+	../objects/lib_raw$o \
+	../objects/lib_setup$o \
+	../objects/lib_termcap$o \
+	../objects/lib_termname$o \
+	../objects/lib_tgoto$o \
+	../objects/lib_ti$o \
+	../objects/lib_tparm$o \
+	../objects/lib_tputs$o \
+	../objects/lib_trace$o \
+	../objects/lib_ttyflags$o \
+	../objects/lib_twait$o \
+	../objects/name_match$o \
+	../objects/names$o \
+	../objects/obsolete$o \
+	../objects/read_entry$o \
+	../objects/read_termcap$o \
+	../objects/strings$o \
+	../objects/tries$o \
+	../objects/trim_sgr0$o \
+	../objects/unctrl$o \
+	../objects/visbuf$o \
+	../objects/alloc_entry$o \
+	../objects/captoinfo$o \
+	../objects/comp_expand$o \
+	../objects/comp_parse$o \
+	../objects/comp_scan$o \
+	../objects/parse_entry$o \
+	../objects/write_entry$o \
+	../objects/define_key$o \
+	../objects/hashed_db$o \
+	../objects/key_defined$o \
+	../objects/keybound$o \
+	../objects/keyok$o \
+	../objects/version$o
 
 $(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/curses.priv.h
 
@@ -237,7 +225,7 @@ NORMAL_OBJS = \
 $(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/form.priv.h
 
 
-menu:
+menuw:
 NORMAL_OBJS = \
 	../objects/m_attribs$o \
 	../objects/m_cursor$o \
@@ -269,6 +257,7 @@ NORMAL_OBJS = \
 $(NORMAL_OBJS) : ../include/ncurses_cfg.h ${srcdir}/menu.priv.h
 
 
+panelw:
 NORMAL_OBJS = \
 	../objects/panel$o \
 	../objects/p_above$o \
@@ -301,4 +290,3 @@ NORMAL_OBJS = \
 	../objects/cursesmain$o
 
 $(NORMAL_OBJS) : ../include/ncurses_cfg.h
-

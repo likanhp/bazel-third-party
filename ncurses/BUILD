@@ -33,6 +33,7 @@ COPTS = COPTS + [
 
 EXTERNAL_HEADERS = [
     "gen/c++/etip.h",
+    "gen/include/curses.h",
     "gen/include/eti.h",
     "gen/include/form.h",
     "gen/include/menu.h",
@@ -52,11 +53,46 @@ EXTERNAL_HEADERS = [
     "ncurses/include/tic.h",
 ]
 
+EXTERNAL_HEADERS_DIRS = [
+    ("top_level", ""),
+    ("narrowc", "/ncurses"),
+    ("widec", "/ncursesw"),
+]
+
+[
+    [
+        copy(
+            name = "copy_external_headers_%s" % name,
+            srcs = EXTERNAL_HEADERS,
+            dir = "include%s" % dir,
+            visibility = [
+                "//visibility:private",
+            ],
+        ),
+        copy(
+            name = "copy_curses_h_%s" % name,
+            srcs = "gen/include/curses.h",
+            dest = "include%s/ncurses.h" % dir,
+            visibility = [
+                "//visibility:private",
+            ],
+        ),
+    ]
+    for name, dir in EXTERNAL_HEADERS_DIRS
+]
+
 [
     [
         cc_library(
-            name = lib + "_for_third_party",
-            hdrs = ["include/%s" % basename(f) for f in EXTERNAL_HEADERS],
+            name = "%s_for_third_party" % lib,
+            hdrs = [
+                "include%s/%s" % (
+                    dir,
+                    basename(f),
+                )
+                for f in EXTERNAL_HEADERS + ["ncurses.h"]
+                for _, dir in EXTERNAL_HEADERS_DIRS
+            ],
             includes = [
                 "include",
             ],
@@ -69,10 +105,17 @@ EXTERNAL_HEADERS = [
         ),
         cc_inc_library(
             name = lib,
-            hdrs = ["include/%s" % basename(f) for f in EXTERNAL_HEADERS],
+            hdrs = [
+                "include%s/%s" % (
+                    dir,
+                    basename(f),
+                )
+                for f in EXTERNAL_HEADERS
+                for _, dir in EXTERNAL_HEADERS_DIRS
+            ],
             prefix = "include",
             deps = [
-                ":%s_for_third_party" % lib,
+                ":%s_impl" % lib,
             ],
         ),
     ]
@@ -82,28 +125,8 @@ EXTERNAL_HEADERS = [
         "ncurses",
         "ncursesxx",
         "panel",
-        "tic",
-        "tinfo",
     ]
 ]
-
-copy(
-    name = "copy_external_headers",
-    srcs = EXTERNAL_HEADERS,
-    dir = "include",
-    visibility = [
-        "//visibility:private",
-    ],
-)
-
-copy(
-    name = "copy_curses_h",
-    srcs = "gen/include/curses.h",
-    dest = "include/ncurses.h",
-    visibility = [
-        "//visibility:private",
-    ],
-)
 
 cc_library(
     name = "common_headers",
@@ -117,100 +140,20 @@ cc_library(
 )
 
 cc_library(
-    name = "tic_impl",
+    name = "ncurses_impl",
     srcs = [
-        "ncurses/ncurses/tinfo/alloc_entry.c",
-        "ncurses/ncurses/tinfo/captoinfo.c",
-        "ncurses/ncurses/tinfo/comp_expand.c",
-        "ncurses/ncurses/tinfo/comp_parse.c",
-        "ncurses/ncurses/tinfo/comp_scan.c",
-        "ncurses/ncurses/tinfo/parse_entry.c",
-        "ncurses/ncurses/tinfo/write_entry.c",
-    ],
-    copts = COPTS,
-    visibility = [
-        "//visibility:private",
-    ],
-    deps = [
-        ":common_headers",
-    ],
-)
-
-cc_library(
-    name = "tinfo_impl",
-    srcs = [
-        "ncurses/ncurses/tinfo/access.c",
-        "ncurses/ncurses/tinfo/add_tries.c",
-        "ncurses/ncurses/tinfo/alloc_ttype.c",
         "gen/ncurses/codes.c",
         "gen/ncurses/comp_captab.c",
-        "ncurses/ncurses/tinfo/comp_error.c",
-        "ncurses/ncurses/tinfo/comp_hash.c",
-        "ncurses/ncurses/tinfo/db_iterator.c",
-        "ncurses/ncurses/tinfo/doalloc.c",
-        "ncurses/ncurses/tinfo/entries.c",
+        "gen/ncurses/expanded.c",
         "gen/ncurses/fallback.c",
-        "ncurses/ncurses/tinfo/free_ttype.c",
-        "ncurses/ncurses/tinfo/getenv_num.c",
-        "ncurses/ncurses/tinfo/home_terminfo.c",
-        "ncurses/ncurses/tinfo/init_keytry.c",
-        "ncurses/ncurses/tinfo/lib_acs.c",
-        "ncurses/ncurses/tinfo/lib_baudrate.c",
-        "ncurses/ncurses/tinfo/lib_cur_term.c",
-        "ncurses/ncurses/tinfo/lib_data.c",
-        "ncurses/ncurses/tinfo/lib_has_cap.c",
-        "ncurses/ncurses/tinfo/lib_kernel.c",
+        "gen/ncurses/lib_gen.c",
         "gen/ncurses/lib_keyname.c",
-        "ncurses/ncurses/tinfo/lib_longname.c",
-        "ncurses/ncurses/tinfo/lib_napms.c",
-        "ncurses/ncurses/tinfo/lib_options.c",
-        "ncurses/ncurses/tinfo/lib_raw.c",
-        "ncurses/ncurses/tinfo/lib_setup.c",
-        "ncurses/ncurses/tinfo/lib_termcap.c",
-        "ncurses/ncurses/tinfo/lib_termname.c",
-        "ncurses/ncurses/tinfo/lib_tgoto.c",
-        "ncurses/ncurses/tinfo/lib_ti.c",
-        "ncurses/ncurses/tinfo/lib_tparm.c",
-        "ncurses/ncurses/tinfo/lib_tputs.c",
-        "ncurses/ncurses/trace/lib_trace.c",
-        "ncurses/ncurses/tinfo/lib_ttyflags.c",
-        "ncurses/ncurses/tty/lib_twait.c",
-        "ncurses/ncurses/tinfo/name_match.c",
         "gen/ncurses/names.c",
-        "ncurses/ncurses/tinfo/obsolete.c",
-        "ncurses/ncurses/tinfo/read_entry.c",
-        "ncurses/ncurses/tinfo/read_termcap.c",
-        "ncurses/ncurses/tinfo/strings.c",
-        "ncurses/ncurses/base/tries.c",
-        "ncurses/ncurses/tinfo/trim_sgr0.c",
         "gen/ncurses/unctrl.c",
-        "ncurses/ncurses/trace/visbuf.c",
         "ncurses/ncurses/base/define_key.c",
-        "ncurses/ncurses/tinfo/hashed_db.c",
         "ncurses/ncurses/base/key_defined.c",
         "ncurses/ncurses/base/keybound.c",
         "ncurses/ncurses/base/keyok.c",
-        "ncurses/ncurses/base/version.c",
-    ] + glob([
-        "gen/ncurses/*.h",
-    ]),
-    copts = COPTS + [
-        "-isystem",
-        "ncurses/gen/ncurses",
-    ],
-    visibility = [
-        "//visibility:private",
-    ],
-    deps = [
-        ":common_headers",
-    ],
-)
-
-cc_library(
-    name = "ncurses_impl",
-    srcs = [
-        "gen/ncurses/expanded.c",
-        "gen/ncurses/lib_gen.c",
         "ncurses/ncurses/base/legacy_coding.c",
         "ncurses/ncurses/base/lib_addch.c",
         "ncurses/ncurses/base/lib_addstr.c",
@@ -285,16 +228,65 @@ cc_library(
         "ncurses/ncurses/base/nc_panel.c",
         "ncurses/ncurses/base/resizeterm.c",
         "ncurses/ncurses/base/safe_sprintf.c",
+        "ncurses/ncurses/base/tries.c",
         "ncurses/ncurses/base/use_window.c",
+        "ncurses/ncurses/base/version.c",
         "ncurses/ncurses/base/vsscanf.c",
         "ncurses/ncurses/base/wresize.c",
+        "ncurses/ncurses/tinfo/access.c",
+        "ncurses/ncurses/tinfo/add_tries.c",
+        "ncurses/ncurses/tinfo/alloc_entry.c",
+        "ncurses/ncurses/tinfo/alloc_ttype.c",
+        "ncurses/ncurses/tinfo/captoinfo.c",
+        "ncurses/ncurses/tinfo/comp_error.c",
+        "ncurses/ncurses/tinfo/comp_expand.c",
+        "ncurses/ncurses/tinfo/comp_hash.c",
+        "ncurses/ncurses/tinfo/comp_parse.c",
+        "ncurses/ncurses/tinfo/comp_scan.c",
+        "ncurses/ncurses/tinfo/db_iterator.c",
+        "ncurses/ncurses/tinfo/doalloc.c",
+        "ncurses/ncurses/tinfo/entries.c",
+        "ncurses/ncurses/tinfo/free_ttype.c",
+        "ncurses/ncurses/tinfo/getenv_num.c",
+        "ncurses/ncurses/tinfo/hashed_db.c",
+        "ncurses/ncurses/tinfo/home_terminfo.c",
+        "ncurses/ncurses/tinfo/init_keytry.c",
+        "ncurses/ncurses/tinfo/lib_acs.c",
+        "ncurses/ncurses/tinfo/lib_baudrate.c",
+        "ncurses/ncurses/tinfo/lib_cur_term.c",
+        "ncurses/ncurses/tinfo/lib_data.c",
+        "ncurses/ncurses/tinfo/lib_has_cap.c",
+        "ncurses/ncurses/tinfo/lib_kernel.c",
+        "ncurses/ncurses/tinfo/lib_longname.c",
+        "ncurses/ncurses/tinfo/lib_napms.c",
+        "ncurses/ncurses/tinfo/lib_options.c",
         "ncurses/ncurses/tinfo/lib_print.c",
+        "ncurses/ncurses/tinfo/lib_raw.c",
+        "ncurses/ncurses/tinfo/lib_setup.c",
+        "ncurses/ncurses/tinfo/lib_termcap.c",
+        "ncurses/ncurses/tinfo/lib_termname.c",
+        "ncurses/ncurses/tinfo/lib_tgoto.c",
+        "ncurses/ncurses/tinfo/lib_ti.c",
+        "ncurses/ncurses/tinfo/lib_tparm.c",
+        "ncurses/ncurses/tinfo/lib_tputs.c",
+        "ncurses/ncurses/tinfo/lib_ttyflags.c",
+        "ncurses/ncurses/tinfo/name_match.c",
+        "ncurses/ncurses/tinfo/obsolete.c",
+        "ncurses/ncurses/tinfo/parse_entry.c",
+        "ncurses/ncurses/tinfo/read_entry.c",
+        "ncurses/ncurses/tinfo/read_termcap.c",
+        "ncurses/ncurses/tinfo/strings.c",
+        "ncurses/ncurses/tinfo/trim_sgr0.c",
         "ncurses/ncurses/tinfo/use_screen.c",
+        "ncurses/ncurses/tinfo/write_entry.c",
+        "ncurses/ncurses/trace/lib_trace.c",
         "ncurses/ncurses/trace/varargs.c",
+        "ncurses/ncurses/trace/visbuf.c",
         "ncurses/ncurses/tty/hardscroll.c",
         "ncurses/ncurses/tty/hashmap.c",
         "ncurses/ncurses/tty/lib_mvcur.c",
         "ncurses/ncurses/tty/lib_tstp.c",
+        "ncurses/ncurses/tty/lib_twait.c",
         "ncurses/ncurses/tty/lib_vidattr.c",
         "ncurses/ncurses/tty/tty_update.c",
         "ncurses/ncurses/widechar/charable.c",
@@ -317,15 +309,18 @@ cc_library(
         "ncurses/ncurses/widechar/lib_vline_set.c",
         "ncurses/ncurses/widechar/lib_wacs.c",
         "ncurses/ncurses/widechar/lib_wunctrl.c",
+    ] + glob([
+        "gen/ncurses/*.h",
+    ]),
+    copts = COPTS + [
+        "-isystem",
+        "ncurses/gen/ncurses",
     ],
-    copts = COPTS,
     visibility = [
         "//visibility:private",
     ],
     deps = [
         ":common_headers",
-        ":tic_impl",
-        ":tinfo_impl",
     ],
 )
 
