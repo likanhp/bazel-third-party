@@ -16,3 +16,6 @@
 [submodule "readline/readline"]
 	path = readline/readline
 	url = git://git.savannah.gnu.org/readline.git
+[submodule "icu/icu"]
+	path = icu/icu
+	url = https://github.com/likanhp/icu.git
