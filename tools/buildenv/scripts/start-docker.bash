@@ -5,14 +5,20 @@ set -e
 _variant=$1
 
 case "${_variant}" in
-  x86) image=likan/buildenv:ubuntu17.10_x86;;
-  x64) image=likan/buildenv:fc26_x64;;
+  x86)
+    image=likan/buildenv:ubuntu17.10_x86
+    docker_entry_point='/usr/bin/linux32 bash'
+    ;;
+  x64)
+    image=likan/buildenv:fc26_x64
+    docker_entry_point='bash'
+    ;;
   *) echo "Variant ${_variant} is not recognized" >&2; exit 1;;
 esac
 
-container_id=$(docker run -d "${image}" bash -c 'while true; do sleep 10000; done')
+container_id=$(docker run -d "${image}" ${docker_entry_point} -c 'while true; do sleep 10000; done')
 
-docker exec "${container_id}" bash -c \
+docker exec "${container_id}" ${docker_entry_point} -c \
   'sudo mkdir -p /opt &&
    sudo chmod 777 /opt &&
    mkdir -p "${HOME}/.libs" && \
@@ -21,10 +27,11 @@ docker exec "${container_id}" bash -c \
    git reset --hard origin/master && \
    git submodule update --init --recursive' >&2
 
-container_homd_dir=$(docker exec "${container_id}" bash -c 'echo "${HOME}"')
+container_homd_dir=$(docker exec "${container_id}" ${docker_entry_point} -c 'echo "${HOME}"')
 
 echo "export container_id='${container_id}';"
 echo "export container_homd_dir='${container_homd_dir}';"
+echo "export docker_entry_point='${docker_entry_point}';"
 echo "export scripts_dir='$(cd "$(dirname "$0")" && pwd)';"
 echo "export _variant='${_variant}';"
 echo "export _source_root='${container_homd_dir}/bazel-third-party';"
@@ -39,8 +46,8 @@ function __buildenv_require() {
     local _export_build_root="/tmp/${lib}_build_tree.${_variant}";
     local _export_install_root="/tmp/${lib}_install_tree.${_variant}";
     local guardian_file="${_export_build_root}/__built";
-    if ! docker exec "${container_id}" bash -c "[[ -f '"'"'${guardian_file}'"'"' ]]"; then
-      docker exec "${container_id}" bash -c
+    if ! docker exec "${container_id}" ${docker_entry_point} -c "[[ -f '"'"'${guardian_file}'"'"' ]]"; then
+      docker exec "${container_id}" ${docker_entry_point} -c 
         "rm -rf '"'"'${_export_build_root}'"'"' '"'"'${_export_install_root}'"'"'" ||
         { echo "${lib} failed to clean up output directories" >&2; return 1; };
       _stage=deps
@@ -50,7 +57,7 @@ function __buildenv_require() {
         { echo "${lib} failed in deps stage" >&2; return 1; };
       docker cp "${build_script}" "${container_id}:/tmp/build_script.bash" ||
         { echo "${lib} failed to copy build script to docker" >&2; return 1; };
-      docker exec "${container_id}" bash -c
+      docker exec "${container_id}" ${docker_entry_point} -c
         "_stage=build-install _prefix=/opt _make_trace_opt=--trace
          _source_root='"'"'${_source_root}'"'"'
          _export_build_root='"'"'${_export_build_root}'"'"'
@@ -58,7 +65,7 @@ function __buildenv_require() {
          _variant='"'"'${_variant}'"'"'
          bash /tmp/build_script.bash" ||
         { echo "${lib} failed to run build script in docker" >&2; return 1; };
-      docker exec "${container_id}" bash -c "touch '"'"'${guardian_file}'"'"'" ||
+      docker exec "${container_id}" ${docker_entry_point} -c "touch '"'"'${guardian_file}'"'"'" ||
         { echo "${lib} failed to create guardian file" >&2; return 1; };
     fi;
   done;
@@ -78,13 +85,13 @@ function __buildenv_export() {
       { echo "${lib} failed to clean up output directories" >&2; return 1; };
     docker cp "${container_id}:/tmp/${lib}_build_tree.${_variant}" "${output_root}" ||
       { rm -rf "${output_root}/${lib}_build_tree.${_variant}" &&
-        docker exec "${container_id}" bash -c \
+        docker exec "${container_id}" ${docker_entry_point} -c \
           "tar -cf - -C /tmp ${lib}_build_tree.${_variant}" |
         tar -xpf - -C "${output_root}"; } ||
       { echo "${lib} failed to export build tree" >&2; return 1; };
     docker cp "${container_id}:/tmp/${lib}_install_tree.${_variant}" "${output_root}" ||
       { rm -rf "${output_root}/${lib}_install_tree.${_variant}" &&
-        docker exec "${container_id}" bash -c \
+        docker exec "${container_id}" ${docker_entry_point} -c \
           "tar -cf - -C /tmp ${lib}_install_tree.${_variant}" >
         "${output_root}/${lib}_install_tree.${_variant}.tar"; } ||
       { echo "${lib} failed to export install tree" >&2; return 1; };
