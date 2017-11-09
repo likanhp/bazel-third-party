@@ -37,6 +37,7 @@ echo "export _variant='${_variant}';"
 echo "export _source_root='${container_homd_dir}/bazel-third-party';"
 echo "export _prefix=/opt;"
 echo "export _make_trace_opt=--trace;"
+echo "export _nproc='$(docker exec "${container_id}" ${docker_entry_point} -c nproc)';"
 echo '
 function __buildenv_require() {
   while (( $# > 0 )); do
@@ -63,6 +64,7 @@ function __buildenv_require() {
          _export_build_root='"'"'${_export_build_root}'"'"'
          _export_install_root='"'"'${_export_install_root}'"'"'
          _variant='"'"'${_variant}'"'"'
+         _nproc='"'"'${_nproc}'"'"'
          bash /tmp/build_script.bash" ||
         { echo "${lib} failed to run build script in docker" >&2; return 1; };
       docker exec "${container_id}" ${docker_entry_point} -c "touch '"'"'${guardian_file}'"'"'" ||

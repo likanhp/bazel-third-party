@@ -32,7 +32,7 @@ if [[ "${_stage}" == build-install ]]; then
     --prefix="${_prefix}" \
     --without-progs \
     "${args[@]}" &&
-  make -j$(nproc) ${_make_trace_opt} libs |& tee make.log &&
+  make -j"${_nproc}" ${_make_trace_opt} libs |& tee make.log &&
   make ${_make_trace_opt} install.libs |& tee make.install.log &&
   make install.libs DESTDIR="${_export_install_root}" &&
   mkdir -p "${_export_build_root}/widec" &&
@@ -41,8 +41,8 @@ if [[ "${_stage}" == build-install ]]; then
     --prefix="${_prefix}" \
     --enable-widec \
     "${args[@]}" &&
-  make -j$(nproc) ${_make_trace_opt} libs |& tee make.log &&
-  make -j$(nproc) ${_make_trace_opt} -C progs |& tee -a make.log &&
+  make -j"${_nproc}" ${_make_trace_opt} libs |& tee make.log &&
+  make -j"${_nproc}" ${_make_trace_opt} -C progs |& tee -a make.log &&
   make ${_make_trace_opt} install.{libs,progs,data,includes,man} |& \
     tee make.install.log &&
   make install.{libs,progs,data,includes,man} DESTDIR="${_export_install_root}" &&

@@ -13,6 +13,7 @@ echo "export _variant=osx;"
 echo "export _source_root='${workspace_root}';"
 echo "export _prefix='${_prefix}';"
 echo "export _make_trace_opt=V=1;"
+echo "export _nproc='$(sysctl -n hw.ncpu)';"
 echo '
 function __buildenv_require() {
   while (( $# > 0 )); do
