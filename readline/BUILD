@@ -128,10 +128,10 @@ cc_library(
                 "//:__subpackages__",
             ],
         ),
-        cc_inc_library(
+        cc_library(
             name = lib,
             hdrs = EXTERNAL_HEADERS,
-            prefix = "readline",
+            include_prefix = "readline",
             deps = [
                 ":%s_impl" % lib,
             ],

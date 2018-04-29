@@ -103,7 +103,7 @@ EXTERNAL_HEADERS_DIRS = [
                 ":%s_impl" % lib,
             ],
         ),
-        cc_inc_library(
+        cc_library(
             name = lib,
             hdrs = [
                 "include%s/%s" % (
@@ -113,7 +113,7 @@ EXTERNAL_HEADERS_DIRS = [
                 for f in EXTERNAL_HEADERS
                 for _, dir in EXTERNAL_HEADERS_DIRS
             ],
-            prefix = "include",
+            include_prefix = "include",
             deps = [
                 ":%s_impl" % lib,
             ],

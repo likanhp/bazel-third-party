@@ -1,9 +1,9 @@
-cc_inc_library(
+cc_library(
     name = "libbz2",
     hdrs = [
         "bzip2/bzlib.h",
     ],
-    prefix = "bzip2",
+    include_prefix = "bzip2",
     visibility = [
         "//visibility:public",
     ],

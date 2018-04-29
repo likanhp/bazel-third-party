@@ -1,10 +1,10 @@
-cc_inc_library(
+cc_library(
     name = "zlib",
     hdrs = [
         "zlib/zconf.h",
         "zlib/zlib.h",
     ],
-    prefix = "zlib",
+    include_prefix = "zlib",
     visibility = [
         "//visibility:public",
     ],

@@ -1,12 +1,12 @@
 load("@bazel_shared//tools/target_cpu:groups.bzl", "apple")
 load("//tools/autoconf:autoconf.bzl", "autoconf")
 
-cc_inc_library(
+cc_library(
     name = "liblzma",
     hdrs = glob([
         "xz/src/liblzma/api/**/*.h",
     ]),
-    prefix = "xz/src/liblzma/api",
+    include_prefix = "xz/src/liblzma/api",
     visibility = [
         "//visibility:public",
     ],
