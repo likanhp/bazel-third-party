@@ -18,7 +18,7 @@ RUN apt install -y autoconf \
                    zip
 
 RUN wget 'https://github.com/likan999/bazel-third-party/releases/download/\
-bazel-0.7.0/bazel-0.7.0-without-jdk-installer-linux-x86.sh' \
+bazel-0.12.0/bazel-0.12.0-without-jdk-installer-linux-x86.sh' \
         -O /tmp/install.sh --progress=dot:mega && \
     bash /tmp/install.sh && rm /tmp/install.sh
 
