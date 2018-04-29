@@ -2,8 +2,7 @@ The following dependencies are collected from Makefiles. Convert them to source
 list using:
 for f in $(head -n $end_line < NOTES | tail +$start_line |
            sed 's/^.*\///g; s/\$o.*/\.'"$suffix"'/g'); do
-  find gen ncurses -name $f; done | sed 's/^/        "/; s/$/",/g'
-done | sort
+  find gen ncurses -name $f; done | sed 's/^/        "/; s/$/",/g' | sort
 
 
 ncursesw:
@@ -112,6 +111,7 @@ NORMAL_OBJS = \
 	../objects/legacy_coding$o \
 	../objects/lib_dft_fgbg$o \
 	../objects/lib_print$o \
+	../objects/new_pair$o \
 	../objects/resizeterm$o \
 	../objects/use_screen$o \
 	../objects/use_window$o \

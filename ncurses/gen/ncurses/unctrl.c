@@ -116,6 +116,7 @@ static const char unctrl_blob[] =
 	int check = (int) ChCharOf(ch);
 	const char *result;
 
+(void) sp;
 	if (check >= 0 && check < (int)SIZEOF(unctrl_table)) {
 #if NCURSES_EXT_FUNCS
 		if ((sp != 0)

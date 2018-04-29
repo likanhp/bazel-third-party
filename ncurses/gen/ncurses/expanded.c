@@ -22,19 +22,19 @@ _nc_toggle_attr_off (attr_t *S, attr_t at)
  int
 _nc_DelCharCost_sp (SCREEN *sp, int count)
 {
- return ((cur_term->type. Strings[105] != 0) ? sp->_dch_cost : ((cur_term->type. Strings[21] != 0) ? (sp->_dch1_cost * count) : 1000000));
+ return (((cur_term)->type2. Strings[105] != 0) ? sp->_dch_cost : (((cur_term)->type2. Strings[21] != 0) ? (sp->_dch1_cost * count) : 1000000));
 }
 
  int
 _nc_InsCharCost_sp (SCREEN *sp, int count)
 {
- return ((cur_term->type. Strings[108] != 0) ? sp->_ich_cost : ((cur_term->type. Strings[31] && cur_term->type. Strings[42]) ? sp->_smir_cost + sp->_rmir_cost + (sp->_ip_cost * count) : ((cur_term->type. Strings[52] != 0) ? ((sp->_ich1_cost + sp->_ip_cost) * count) : 1000000)));
+ return (((cur_term)->type2. Strings[108] != 0) ? sp->_ich_cost : (((cur_term)->type2. Strings[31] && (cur_term)->type2. Strings[42]) ? sp->_smir_cost + sp->_rmir_cost + (sp->_ip_cost * count) : (((cur_term)->type2. Strings[52] != 0) ? ((sp->_ich1_cost + sp->_ip_cost) * count) : 1000000)));
 }
 
  void
 _nc_UpdateAttrs_sp (SCREEN *sp, const cchar_t * c)
 {
- if (!((((*((sp)->_current_attr))).attr) == (((*c)).attr) && ((((*((sp)->_current_attr))).ext_color) ? (((*((sp)->_current_attr))).ext_color) : ((int)((((unsigned long)((((*((sp)->_current_attr))).attr)) & ((chtype)((((1U) << 8) - 1U)) << ((0) + 8))) >> 8)))) == ((((*c)).ext_color) ? (((*c)).ext_color) : ((int)((((unsigned long)((((*c)).attr)) & ((chtype)((((1U) << 8) - 1U)) << ((0) + 8))) >> 8)))))) { attr_t chg = (((*((sp)->_current_attr))).attr); vid_puts_sp(sp, (((*c)).attr), (short) ((((*c)).ext_color) ? (((*c)).ext_color) : ((int)((((unsigned long)((((*c)).attr)) & ((chtype)((((1U) << 8) - 1U)) << ((0) + 8))) >> 8)))), 0, _nc_outch_sp); if (cur_term->type. Numbers[4] > 0 && (((chg ^ (((*((sp)->_current_attr))).attr))) & sp->_xmc_suppress)) { ; _nc_do_xmc_glitch_sp(sp, chg); } };
+ if (!((((*((sp)->_current_attr))).attr) == (((*c)).attr) && ((((*((sp)->_current_attr))).ext_color) ? (((*((sp)->_current_attr))).ext_color) : ((int)((((unsigned long)((((*((sp)->_current_attr))).attr)) & ((chtype)((((1U) << 8) - 1U)) << ((0) + 8))) >> 8)))) == ((((*c)).ext_color) ? (((*c)).ext_color) : ((int)((((unsigned long)((((*c)).attr)) & ((chtype)((((1U) << 8) - 1U)) << ((0) + 8))) >> 8)))))) { vid_puts_sp(sp, (((*c)).attr), (short) ((((*c)).ext_color) ? (((*c)).ext_color) : ((int)((((unsigned long)((((*c)).attr)) & ((chtype)((((1U) << 8) - 1U)) << ((0) + 8))) >> 8)))), 0, _nc_outch_sp); };
 }
 
 #if NCURSES_SP_FUNCS

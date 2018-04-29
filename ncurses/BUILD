@@ -226,6 +226,7 @@ cc_library(
         "ncurses/ncurses/base/lib_winch.c",
         "ncurses/ncurses/base/lib_window.c",
         "ncurses/ncurses/base/nc_panel.c",
+        "ncurses/ncurses/base/new_pair.c",
         "ncurses/ncurses/base/resizeterm.c",
         "ncurses/ncurses/base/safe_sprintf.c",
         "ncurses/ncurses/base/tries.c",
@@ -535,6 +536,10 @@ cc_binary(
     name = "bin/clear",
     srcs = [
         "ncurses/progs/clear.c",
+        "ncurses/progs/clear_cmd.c",
+        "ncurses/progs/clear_cmd.h",
+        "ncurses/progs/tty_settings.c",
+        "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
     deps = [
@@ -547,6 +552,8 @@ cc_binary(
     name = "bin/tabs",
     srcs = [
         "ncurses/progs/tabs.c",
+        "ncurses/progs/tty_settings.c",
+        "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
     deps = [
@@ -559,10 +566,16 @@ cc_binary(
     name = "bin/tput",
     srcs = [
         "gen/progs/transform.h",
+        "ncurses/progs/clear_cmd.c",
+        "ncurses/progs/clear_cmd.h",
+        "ncurses/progs/reset_cmd.c",
+        "ncurses/progs/reset_cmd.h",
         "ncurses/progs/tparm_type.c",
         "ncurses/progs/tparm_type.h",
         "ncurses/progs/tput.c",
         "ncurses/progs/transform.c",
+        "ncurses/progs/tty_settings.c",
+        "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
     deps = [
@@ -575,10 +588,12 @@ cc_binary(
     name = "bin/tset",
     srcs = [
         "gen/progs/transform.h",
-        "ncurses/progs/dump_entry.c",
-        "ncurses/progs/dump_entry.h",
+        "ncurses/progs/reset_cmd.c",
+        "ncurses/progs/reset_cmd.h",
         "ncurses/progs/transform.c",
         "ncurses/progs/tset.c",
+        "ncurses/progs/tty_settings.c",
+        "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
     deps = [

@@ -1,3 +1,5 @@
+#ifndef PARAMETRIZED_H
+#define PARAMETRIZED_H 1
 /*
  * parametrized.h --- is a termcap capability parametrized?
  *
@@ -558,3 +560,4 @@ static short const parametrized[] = {
 0,	/*  lvert  */
 } /* 548 entries */;
 
+#endif /* PARAMETRIZED_H */

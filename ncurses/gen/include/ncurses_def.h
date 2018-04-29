@@ -45,6 +45,10 @@
 #define GCC_UNUSED /* nothing */
 #endif
 
+#ifndef HAVE_ALLOC_PAIR
+#define HAVE_ALLOC_PAIR 0
+#endif
+
 #ifndef HAVE_ASSUME_DEFAULT_COLORS
 #define HAVE_ASSUME_DEFAULT_COLORS 0
 #endif
@@ -61,6 +65,10 @@
 #define HAVE_BSD_SIGNAL_H 0
 #endif
 
+#ifndef HAVE_BSD_STRING_H
+#define HAVE_BSD_STRING_H 0
+#endif
+
 #ifndef HAVE_BTOWC
 #define HAVE_BTOWC 0
 #endif
@@ -73,12 +81,40 @@
 #define HAVE_CHGAT 1
 #endif
 
+#ifndef HAVE_COLOR_CONTENT
+#define HAVE_COLOR_CONTENT 1
+#endif
+
 #ifndef HAVE_COLOR_SET
 #define HAVE_COLOR_SET 1
 #endif
 
+#ifndef HAVE_COPYWIN
+#define HAVE_COPYWIN 1
+#endif
+
+#ifndef HAVE_CURSCR
+#define HAVE_CURSCR 1
+#endif
+
+#ifndef HAVE_CURSES_DATA_TTYTYPE
+#define HAVE_CURSES_DATA_TTYTYPE 1
+#endif
+
+#ifndef HAVE_DELSCREEN
+#define HAVE_DELSCREEN 1
+#endif
+
+#ifndef HAVE_DERWIN
+#define HAVE_DERWIN 1
+#endif
+
 #ifndef HAVE_DIRENT_H
 #define HAVE_DIRENT_H 0
+#endif
+
+#ifndef HAVE_DUPWIN
+#define HAVE_DUPWIN 1
 #endif
 
 #ifndef HAVE_ERRNO
@@ -157,8 +193,16 @@
 #define HAVE_GXX_BUILTIN_H 0
 #endif
 
+#ifndef HAVE_HALFDELAY
+#define HAVE_HALFDELAY 1
+#endif
+
 #ifndef HAVE_HAS_KEY
 #define HAVE_HAS_KEY 0
+#endif
+
+#ifndef HAVE_INIT_EXTENDED_COLOR
+#define HAVE_INIT_EXTENDED_COLOR 0
 #endif
 
 #ifndef HAVE_INTTYPES_H
@@ -265,8 +309,16 @@
 #define HAVE_MKSTEMP 0
 #endif
 
+#ifndef HAVE_MVDERWIN
+#define HAVE_MVDERWIN 1
+#endif
+
 #ifndef HAVE_MVVLINE
 #define HAVE_MVVLINE 1
+#endif
+
+#ifndef HAVE_MVWIN
+#define HAVE_MVWIN 1
 #endif
 
 #ifndef HAVE_MVWVLINE
@@ -279,6 +331,10 @@
 
 #ifndef HAVE_NC_ALLOC_H
 #define HAVE_NC_ALLOC_H 0
+#endif
+
+#ifndef HAVE_NEWPAD
+#define HAVE_NEWPAD 1
 #endif
 
 #ifndef HAVE_PANEL_H
@@ -325,12 +381,20 @@
 #define HAVE_REMOVE 0
 #endif
 
+#ifndef HAVE_RESET_COLOR_PAIRS
+#define HAVE_RESET_COLOR_PAIRS 0
+#endif
+
 #ifndef HAVE_RESIZETERM
 #define HAVE_RESIZETERM 0
 #endif
 
 #ifndef HAVE_RESIZE_TERM
 #define HAVE_RESIZE_TERM 0
+#endif
+
+#ifndef HAVE_RESTARTTERM
+#define HAVE_RESTARTTERM 1
 #endif
 
 #ifndef HAVE_RIPOFFLINE
@@ -461,12 +525,20 @@
 #define HAVE_TCGETPGRP 0
 #endif
 
+#ifndef HAVE_TDESTROY
+#define HAVE_TDESTROY 0
+#endif
+
 #ifndef HAVE_TELL
 #define HAVE_TELL 0
 #endif
 
 #ifndef HAVE_TERMATTRS
 #define HAVE_TERMATTRS 1
+#endif
+
+#ifndef HAVE_TERMCAP_H
+#define HAVE_TERMCAP_H 1
 #endif
 
 #ifndef HAVE_TERMIOS_H
@@ -503,6 +575,14 @@
 
 #ifndef HAVE_TIMES
 #define HAVE_TIMES 0
+#endif
+
+#ifndef HAVE_TPUTS_SP
+#define HAVE_TPUTS_SP 0
+#endif
+
+#ifndef HAVE_TSEARCH
+#define HAVE_TSEARCH 0
 #endif
 
 #ifndef HAVE_TTYENT_H
@@ -577,6 +657,14 @@
 #define HAVE_VSSCANF 0
 #endif
 
+#ifndef HAVE_VW_PRINTW
+#define HAVE_VW_PRINTW 1
+#endif
+
+#ifndef HAVE_WCHGAT
+#define HAVE_WCHGAT 1
+#endif
+
 #ifndef HAVE_WCSRTOMBS
 #define HAVE_WCSRTOMBS 0
 #endif
@@ -597,6 +685,10 @@
 #define HAVE_WCTYPE_H 0
 #endif
 
+#ifndef HAVE_WINSDELLN
+#define HAVE_WINSDELLN 1
+#endif
+
 #ifndef HAVE_WINSSTR
 #define HAVE_WINSSTR 1
 #endif
@@ -615,6 +707,10 @@
 
 #ifndef HAVE__DOSCAN
 #define HAVE__DOSCAN 0
+#endif
+
+#ifndef HAVE__TRACEF
+#define HAVE__TRACEF 0
 #endif
 
 #ifndef MIXEDCASE_FILENAMES

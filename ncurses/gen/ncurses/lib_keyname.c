@@ -324,14 +324,13 @@ static const char key_names[] =
 NCURSES_EXPORT(NCURSES_CONST char *)
 safe_keyname (SCREEN *sp, int c)
 {
-	int i;
 	char name[20];
-	char *p;
 	NCURSES_CONST char *result = 0;
 
 	if (c == -1) {
 		result = "-1";
 	} else {
+		int i;
 		for (i = 0; _nc_key_names[i].offset != -1; i++) {
 			if (_nc_key_names[i].code == c) {
 				result = (NCURSES_CONST char *)key_names + _nc_key_names[i].offset;
@@ -359,7 +358,7 @@ safe_keyname (SCREEN *sp, int c)
 				/* create and cache result as needed */
 				if (MyTable[c] == 0) {
 					int cc = c;
-					p = name;
+					char *p = name;
 #define P_LIMIT (sizeof(name) - (size_t) (p - name))
 					if (cc >= 128 && m_prefix) {
 						_nc_STRCPY(p, "M-", P_LIMIT);
@@ -380,7 +379,7 @@ safe_keyname (SCREEN *sp, int c)
 		} else if (result == 0 && HasTerminal(sp)) {
 			int j, k;
 			char * bound;
-			TERMTYPE *tp = &(TerminalOf(sp)->type);
+			TERMTYPE2 *tp = &TerminalType(TerminalOf(sp));
 			unsigned save_trace = _nc_tracing;
 
 			_nc_tracing = 0;	/* prevent recursion via keybound() */
@@ -411,8 +410,8 @@ keyname (int c)
 #if NO_LEAKS
 void _nc_keyname_leaks(void)
 {
-	int j;
 	if (MyTable != 0) {
+		int j;
 		for (j = 0; j < SIZEOF_TABLE; ++j) {
 			FreeIfNeeded(MyTable[j]);
 		}

@@ -1,6 +1,6 @@
 /* include/ncurses_cfg.h.  Generated automatically by configure.  */
 /****************************************************************************
- * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,10 +28,13 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1997                        *
+ *  Author: Thomas E. Dickey      1997-on                                   *
  ****************************************************************************/
 /*
- * $Id: ncurses_cfg.hin,v 1.7 2005/01/02 01:26:58 tom Exp $
+ * $Id: ncurses_cfg.hin,v 1.11 2017/12/09 20:41:54 tom Exp $
+ *
+ * Both ncurses_cfg.h and ncurses_def.h are internal header-files used when
+ * building ncurses.
  *
  * This is a template-file used to generate the "ncurses_cfg.h" file.
  *
@@ -41,14 +44,14 @@
  *
  * See:
  *	http://invisible-island.net/autoconf/
- *	ftp://invisible-island.net/autoconf/
+ *	ftp://ftp.invisible-island.net/autoconf/
  */
 #ifndef NC_CONFIG_H
 #define NC_CONFIG_H
 
 #define PACKAGE "ncurses"
 #define NCURSES_VERSION "6.0"
-#define NCURSES_PATCHDATE 20150808
+#define NCURSES_PATCHDATE 20180127
 #define SYSTEM_NAME "linux-gnu"
 #if 0
 #include <stdlib.h>
@@ -63,6 +66,7 @@
 #define PURE_TERMINFO 1
 #define USE_HOME_TERMINFO 1
 #define USE_ROOT_ENVIRON 1
+#define HAVE_UNISTD_H 1
 #define HAVE_REMOVE 1
 #define HAVE_UNLINK 1
 #define HAVE_LINK 1
@@ -71,6 +75,8 @@
 #define HAVE_LANGINFO_CODESET 1
 #define USE_WIDEC_SUPPORT 1
 #define NCURSES_WIDECHAR 1
+#define HAVE_WCHAR_H 1
+#define HAVE_WCTYPE_H 1
 #define HAVE_PUTWC 1
 #define HAVE_BTOWC 1
 #define HAVE_WCTOB 1
@@ -86,6 +92,8 @@
 #define NEED_WCHAR_H 1
 #define _FILE_OFFSET_BITS 64
 #define HAVE_FSEEKO 1
+#define RGB_PATH "/usr/share/X11/rgb.txt"
+#define NCURSES_EXT_FUNCS 1
 #define HAVE_ASSUME_DEFAULT_COLORS 1
 #define HAVE_CURSES_VERSION 1
 #define HAVE_HAS_KEY 1
@@ -93,12 +101,16 @@
 #define HAVE_RESIZE_TERM 1
 #define HAVE_TERM_ENTRY_H 1
 #define HAVE_USE_DEFAULT_COLORS 1
+#define HAVE_USE_EXTENDED_NAMES 1
 #define HAVE_USE_SCREEN 1
 #define HAVE_USE_WINDOW 1
 #define HAVE_WRESIZE 1
-#define NCURSES_EXT_FUNCS 1
 #define NCURSES_SP_FUNCS 1
+#define HAVE_TPUTS_SP 1
 #define NCURSES_EXT_COLORS 1
+#define HAVE_ALLOC_PAIR 1
+#define HAVE_INIT_EXTENDED_COLOR 1
+#define HAVE_RESET_COLOR_PAIRS 1
 #define NCURSES_EXT_PUTWIN 1
 #define NCURSES_NO_PADDING 1
 #define STDC_HEADERS 1
@@ -113,9 +125,9 @@
 #define HAVE_UNISTD_H 1
 #define SIZEOF_SIGNED_CHAR 1
 #define USE_SIGWINCH 1
+#define NCURSES_WRAP_PREFIX "_nc_"
 #define USE_ASSUMED_COLOR 1
 #define USE_HASHMAP 1
-#define NCURSES_WRAP_PREFIX "_nc_"
 #define GCC_SCANF 1
 #define GCC_SCANFLIKE(fmt,var) __attribute__((format(scanf,fmt,var)))
 #define GCC_PRINTF 1
@@ -148,6 +160,9 @@
 #define HAVE_GETOPT_HEADER 1
 #define HAVE_SYS_TIME_SELECT 1
 #define SIG_ATOMIC_T volatile sig_atomic_t
+#ifdef __APPLE__
+#define HAVE_ERRNO 1
+#endif
 #define HAVE_GETCWD 1
 #define HAVE_GETEGID 1
 #define HAVE_GETEUID 1
@@ -171,7 +186,9 @@
 #define HAVE_STRDUP 1
 #define HAVE_STRSTR 1
 #define HAVE_TCGETPGRP 1
+#define HAVE_TDESTROY 1
 #define HAVE_TIMES 1
+#define HAVE_TSEARCH 1
 #define HAVE_VSNPRINTF 1
 #define HAVE_ISASCII 1
 #define HAVE_NANOSLEEP 1
@@ -182,8 +199,11 @@
 #define HAVE_UNISTD_H 1
 #define HAVE_TCGETATTR 1
 #define HAVE_VSSCANF 1
+#define HAVE_UNISTD_H 1
 #define HAVE_MKSTEMP 1
 #define HAVE_SIZECHANGE 1
+#define HAVE_POSIX_OPENPT 1
+#define HAVE_WORKING_POLL 1
 #define HAVE_VA_COPY 1
 #define HAVE___VA_COPY 1
 #define HAVE_UNISTD_H 1
@@ -191,6 +211,7 @@
 #define HAVE_VFORK 1
 #define HAVE_WORKING_VFORK 1
 #define HAVE_WORKING_FORK 1
+#define USE_OPENPTY_HEADER <pty.h>
 #define USE_XTERM_PTY 1
 #define HAVE_TYPEINFO 1
 #define HAVE_IOSTREAM 1
@@ -205,8 +226,9 @@
 #define HAVE_FORM_H 1
 #define HAVE_LIBFORM 1
 #define NCURSES_PATHSEP ':'
-#define NCURSES_VERSION_STRING "6.0.20150808"
-#define NCURSES_OSPEED_COMPAT 0
+#define NCURSES_VERSION_STRING "6.1.20180127"
+#define NCURSES_OSPEED_COMPAT 1
+#define HAVE_CURSES_DATA_BOOLNAMES 1
 
 #include <ncurses_def.h>
 
@@ -214,11 +236,6 @@
 #ifdef __cplusplus
 #undef const
 #undef inline
-#else
-#if defined(lint) || defined(TRACE)
-#undef inline
-#define inline /* nothing */
-#endif
 #endif
 
 	/* On HP-UX, the C compiler doesn't grok mbstate_t without
@@ -231,4 +248,7 @@
 #endif
 #endif
 
+/*
+ * vile:cmode
+ */
 #endif /* NC_CONFIG_H */

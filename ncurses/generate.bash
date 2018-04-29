@@ -31,7 +31,7 @@ mkdir -p generated
 tag=fc26_x64
 cid=$(docker run -d likan/buildenv:${tag} bash -c \
 	"cd ~/bazel-third-party &&
-	 git fetch && git reset --hard origin/master &&
+	 git fetch && git reset --hard origin/dev &&
 	 cd ncurses/ncurses && mkdir build && cd build &&
 	 ../configure ${args[*]} --enable-widec &&
 	 make --trace >&make.log &&
@@ -43,7 +43,7 @@ docker rm ${cid}
 tag=ubuntu17.10_x86
 cid=$(docker run -d likan/buildenv:${tag} bash -c \
 	"cd ~/bazel-third-party &&
-	 git fetch && git reset --hard origin/master &&
+	 git fetch && git reset --hard origin/dev &&
 	 cd ncurses/ncurses &&
    sed --in-place 's/^PRG=.*$/PRG=gcc/g' ncurses/base/MKlib_gen.sh &&
    mkdir build && cd build &&
