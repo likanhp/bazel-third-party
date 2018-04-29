@@ -7,3 +7,8 @@ git_repository(
     remote = "https://github.com/likanhp/bazel-shared.git",
     tag = "latest",
 )
+
+local_repository(
+    name = "icu_double_conversion",
+    path = "./icu/icu/vendor/double-conversion/upstream",
+)
