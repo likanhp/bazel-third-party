@@ -160,9 +160,6 @@
 #define HAVE_GETOPT_HEADER 1
 #define HAVE_SYS_TIME_SELECT 1
 #define SIG_ATOMIC_T volatile sig_atomic_t
-#ifdef __APPLE__
-#define HAVE_ERRNO 1
-#endif
 #define HAVE_GETCWD 1
 #define HAVE_GETEGID 1
 #define HAVE_GETEUID 1
