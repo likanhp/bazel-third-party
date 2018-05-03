@@ -121,11 +121,11 @@ cc_library(
             includes = [
                 "readline",
             ],
-            deps = [
-                ":%s_impl" % lib,
-            ],
             visibility = [
                 "//:__subpackages__",
+            ],
+            deps = [
+                ":%s_impl" % lib,
             ],
         ),
         cc_library(
@@ -137,5 +137,8 @@ cc_library(
             ],
         ),
     ]
-    for lib in ["readline", "history"]
+    for lib in [
+        "readline",
+        "history",
+    ]
 ]

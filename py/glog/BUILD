@@ -6,10 +6,10 @@ py_library(
     imports = [
         "glog",
     ],
-    deps = [
-        "//py/gflags",
-    ],
     visibility = [
         "//visibility:public",
+    ],
+    deps = [
+        "//py/gflags",
     ],
 )
