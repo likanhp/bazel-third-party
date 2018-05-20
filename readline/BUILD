@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-load("//tools/autoconf:autoconf.bzl", "autoconf")
+load("@bazel_shared//tools/autoconf:autoconf.bzl", "autoconf")
 
 COPTS = [
     "-DHAVE_CONFIG_H",
@@ -27,7 +27,7 @@ autoconf(
     out = "config.h",
     template = "config.h.in",
     vars = [
-        "//tools/autoconf:cc_common",
+        "@bazel_shared//tools/autoconf:cc_common",
     ],
 )
 

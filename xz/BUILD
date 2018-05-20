@@ -1,5 +1,5 @@
+load("@bazel_shared//tools/autoconf:autoconf.bzl", "autoconf")
 load("@bazel_shared//tools/target_cpu:groups.bzl", "apple")
-load("//tools/autoconf:autoconf.bzl", "autoconf")
 
 cc_library(
     name = "liblzma",
@@ -100,7 +100,7 @@ autoconf(
     out = "config.h",
     template = "config.h.in",
     vars = [
-        "//tools/autoconf:cc_common",
+        "@bazel_shared//tools/autoconf:cc_common",
     ],
 )
 
