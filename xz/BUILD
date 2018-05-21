@@ -1,12 +1,21 @@
+package(default_visibility = ["//visibility:private"])
+
 load("@bazel_shared//tools/autoconf:autoconf.bzl", "autoconf")
+load("@bazel_shared//tools/build_defs:file.bzl", "basename")
 load("@bazel_shared//tools/target_cpu:groups.bzl", "apple")
+load(
+    "//tools/build_defs:cc.bzl",
+    "INCLUDE_PREFIX",
+    "copts_include",
+)
 
 cc_library(
     name = "liblzma",
     hdrs = glob([
         "xz/src/liblzma/api/**/*.h",
     ]),
-    include_prefix = "xz/src/liblzma/api",
+    include_prefix = INCLUDE_PREFIX + "/xz",
+    strip_include_prefix = "xz/src/liblzma/api",
     visibility = [
         "//visibility:public",
     ],
@@ -34,11 +43,11 @@ cc_library(
 BINARY_COPTS = [
     "-std=c99",
     "-DHAVE_CONFIG_H",
-    "-isystem",
-    "$(GENDIR)/xz",
-    "-Ixz/xz/src/common",
-    "-Ixz/xz/src/liblzma/api",
-]
+] + copts_include(
+    "xz",
+    gendir = True,
+    system = True,
+) + copts_include("xz/xz/src/common") + copts_include("xz/xz/src/liblzma/api")
 
 cc_binary(
     name = "lzmainfo",
@@ -51,6 +60,9 @@ cc_binary(
         "xz/src/lzmainfo/lzmainfo.c",
     ],
     copts = BINARY_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":impl",
     ],
@@ -74,26 +86,41 @@ cc_binary(
         "xz/src/xz/*.h",
     ]),
     copts = BINARY_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":impl",
     ],
 )
 
-cc_binary(
-    name = "xzdec",
-    srcs = [
-        "xz/src/common/tuklib_exit.c",
-        "xz/src/common/tuklib_exit.h",
-        "xz/src/common/tuklib_gettext.h",
-        "xz/src/common/tuklib_progname.c",
-        "xz/src/common/tuklib_progname.h",
-        "xz/src/xzdec/xzdec.c",
-    ],
-    copts = BINARY_COPTS,
-    deps = [
-        ":impl",
-    ],
-)
+[
+    cc_binary(
+        name = name,
+        srcs = [
+            "xz/src/common/tuklib_exit.c",
+            "xz/src/common/tuklib_exit.h",
+            "xz/src/common/tuklib_gettext.h",
+            "xz/src/common/tuklib_progname.c",
+            "xz/src/common/tuklib_progname.h",
+            "xz/src/xzdec/xzdec.c",
+        ],
+        copts = BINARY_COPTS + opts,
+        visibility = [
+            "//visibility:public",
+        ],
+        deps = [
+            ":impl",
+        ],
+    )
+    for name, opts in (
+        ("xzdec", []),
+        (
+            "lzmadec",
+            ["-DLZMADEC"],
+        ),
+    )
+]
 
 autoconf(
     name = "generate_config_h",
@@ -148,13 +175,9 @@ cc_library(
         "xz/src/liblzma/api/**/*.h",
     ]),
     copts = BINARY_COPTS + [
-        "-Ixz/xz/src/liblzma/check",
-        "-Ixz/xz/src/liblzma/common",
-        "-Ixz/xz/src/liblzma/delta",
-        "-Ixz/xz/src/liblzma/lz",
-        "-Ixz/xz/src/liblzma/lzma",
-        "-Ixz/xz/src/liblzma/rangecoder",
-        "-Ixz/xz/src/liblzma/simple",
+        copt
+        for dir in ("check", "common", "delta", "lz", "lzma", "rangecoder", "simple")
+        for copt in copts_include("xz/xz/src/liblzma/%s" % dir)
     ],
     linkopts = select(
         apple([]) + {
@@ -163,7 +186,114 @@ cc_library(
             ],
         },
     ),
-    visibility = [
-        "//visibility:private",
+)
+
+[
+    cc_binary(
+        name = basename(file)[:-2],
+        srcs = [
+            file,
+            "xz/tests/tests.h",
+        ],
+        copts = BINARY_COPTS,
+        deps = [
+            ":impl",
+        ],
+    )
+    for file in glob([
+        "xz/tests/test_*.c",
+    ]) + [
+        "xz/tests/create_compress_files.c",
+    ]
+]
+
+[
+    genrule(
+        name = "test_%s" % name,
+        srcs = [],
+        outs = [
+            "%s_out.txt" % name,
+        ],
+        cmd = "$(location :%s) > $@" % name,
+        tools = [
+            ":%s" % name,
+        ],
+    )
+    for file in glob([
+        "xz/tests/test_*.c",
+    ])
+    for name in (basename(file)[:-2],)
+]
+
+GOOD_XZ_FILES = glob(["xz/tests/files/good-*.xz"])
+
+BAD_XZ_FILES = glob(["xz/tests/files/bad-*.xz"])
+
+genrule(
+    name = "test_files",
+    srcs = GOOD_XZ_FILES + BAD_XZ_FILES,
+    outs = [
+        "test_files_out.txt",
+    ],
+    cmd = ("{ " +
+           " && ".join(["$(location :xz) -dc $(location %s)" % file for file in GOOD_XZ_FILES] +
+                       ["$(location :xzdec) $(location %s)" % file for file in GOOD_XZ_FILES] +
+                       ["! $(location :xz) -dc $(location %s)" % file for file in BAD_XZ_FILES] +
+                       ["! $(location :xzdec) $(location %s)" % file for file in BAD_XZ_FILES]) +
+           "; } > $@ 2> /dev/null"),
+    tools = [
+        ":xz",
+        ":xzdec",
     ],
 )
+
+PREPARED_COMPRESS_FILES = glob(["xz/tests/compress_prepared_*"])
+
+INPUT_FILES = (["$(location %s)" % file for file in PREPARED_COMPRESS_FILES] +
+               ["compress_generated_%s" % file for file in ("abc", "random", "text")])
+
+ARGS = (["-%d" % i for i in range(1, 5)] +
+        ["%s --lzma2=dict=64KiB,nice=32,mode=fast" % arg for arg in (
+            "--delta=dist=1",
+            "--delta=dist=4",
+            "--delta=dist=256",
+            "--x86",
+            "--powerpc",
+            "--ia64",
+            "--arm",
+            "--armthumb",
+            "--sparc",
+        )])
+
+genrule(
+    name = "test_compress",
+    srcs = PREPARED_COMPRESS_FILES,
+    outs = [
+        "test_compress_in.txt",
+        "test_compress_out.txt",
+    ],
+    cmd = ("{ " +
+           " && ".join(["$(location :create_compress_files)"] +
+                       [
+                           " && ".join([
+                               "$(location :xz) -c %s %s > $(location test_compress_in.txt)" % (arg, input),
+                               "$(location :xz) -cd $(location test_compress_in.txt) > " +
+                               "$(location test_compress_out.txt)",
+                               "cmp $(location test_compress_out.txt) %s" % input,
+                               "$(location :xzdec) $(location test_compress_in.txt) > " +
+                               "$(location test_compress_out.txt)",
+                               "cmp $(location test_compress_out.txt) %s" % input,
+                           ])
+                           for arg in ARGS
+                           for input in INPUT_FILES
+                       ]) +
+           "; } >& /dev/null"),
+    tools = [
+        ":create_compress_files",
+        ":xz",
+        ":xzdec",
+    ],
+)
+
+# TODO: add rules generating scripts xzdiff, xzgrep, xzless and xzmore, as well
+# as their test cases.

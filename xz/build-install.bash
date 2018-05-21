@@ -7,6 +7,7 @@ if [[ "${_stage}" == build-install ]]; then
   cd "${_export_build_root}" &&
   "${_source_root}/xz/xz/configure" --prefix="${_prefix}" --disable-shared --enable-static &&
   make -j"${_nproc}" ${_make_trace_opt} |& tee make.log &&
+  make check -j"${_nproc}" ${_make_trace_opt} |& tee make.check.log &&
   make install ${_make_trace_opt} |& tee make.install.log &&
   make install DESTDIR="${_export_install_root}"
 fi
