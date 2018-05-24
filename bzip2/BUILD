@@ -1,9 +1,13 @@
+package(default_visibility = ["//visibility:private"])
+
+load("//tools/build_defs:cc.bzl", "INCLUDE_PREFIX")
+
 cc_library(
     name = "libbz2",
     hdrs = [
         "bzip2/bzlib.h",
     ],
-    include_prefix = "bzip2",
+    include_prefix = INCLUDE_PREFIX,
     visibility = [
         "//visibility:public",
     ],
