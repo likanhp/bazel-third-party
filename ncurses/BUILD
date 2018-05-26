@@ -1,7 +1,12 @@
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//visibility:private"])
 
 load("@bazel_shared//tools/build_defs:file.bzl", "basename", "copy")
 load("@bazel_shared//tools/target_cpu:groups.bzl", "apple", "linux")
+load(
+    "//tools/build_defs:cc.bzl",
+    "INCLUDE_PREFIX",
+    "copts_include",
+)
 
 COMMON_HEADER_DIRS = [
     "gen/include",
@@ -12,10 +17,10 @@ COMMON_HEADER_DIRS = [
 COPTS = []
 
 [
-    COPTS.extend([
-        "-isystem",
-        "ncurses/" + d,
-    ])
+    COPTS.extend(copts_include(
+        "ncurses/%s" % d,
+        system = True,
+    ))
     for d in COMMON_HEADER_DIRS
 ]
 
@@ -65,17 +70,11 @@ EXTERNAL_HEADERS_DIRS = [
             name = "copy_external_headers_%s" % name,
             srcs = EXTERNAL_HEADERS,
             dir = "include%s" % dir,
-            visibility = [
-                "//visibility:private",
-            ],
         ),
         copy(
             name = "copy_curses_h_%s" % name,
             srcs = "gen/include/curses.h",
             dest = "include%s/ncurses.h" % dir,
-            visibility = [
-                "//visibility:private",
-            ],
         ),
     ]
     for name, dir in EXTERNAL_HEADERS_DIRS
@@ -106,14 +105,16 @@ EXTERNAL_HEADERS_DIRS = [
         cc_library(
             name = lib,
             hdrs = [
-                "include%s/%s" % (
-                    dir,
-                    basename(f),
-                )
+                "include/%s" % basename(f)
                 for f in EXTERNAL_HEADERS
-                for _, dir in EXTERNAL_HEADERS_DIRS
+            ] + [
+                "include/ncurses.h",
             ],
-            include_prefix = "include",
+            include_prefix = INCLUDE_PREFIX + "/ncurses",
+            strip_include_prefix = "include",
+            visibility = [
+                "//visibility:public",
+            ],
             deps = [
                 ":%s_impl" % lib,
             ],
@@ -134,9 +135,6 @@ cc_library(
         "ncurses/include/capdefaults.c",
     ],
     copts = COPTS,
-    visibility = [
-        "//visibility:private",
-    ],
 )
 
 cc_library(
@@ -313,13 +311,10 @@ cc_library(
     ] + glob([
         "gen/ncurses/*.h",
     ]),
-    copts = COPTS + [
-        "-isystem",
+    copts = COPTS + copts_include(
         "ncurses/gen/ncurses",
-    ],
-    visibility = [
-        "//visibility:private",
-    ],
+        system = True,
+    ),
     deps = [
         ":common_headers",
     ],
@@ -371,13 +366,10 @@ cc_library(
     ] + [
         "ncurses/form/form.priv.h",
     ],
-    copts = COPTS + [
-        "-isystem",
+    copts = COPTS + copts_include(
         "ncurses/ncurses/form",
-    ],
-    visibility = [
-        "//visibility:private",
-    ],
+        system = True,
+    ),
     deps = [
         ":common_headers",
         ":ncurses_impl",
@@ -416,13 +408,10 @@ cc_library(
     ] + [
         "ncurses/menu/menu.priv.h",
     ],
-    copts = COPTS + [
-        "-isystem",
+    copts = COPTS + copts_include(
         "ncurses/ncurses/menu",
-    ],
-    visibility = [
-        "//visibility:private",
-    ],
+        system = True,
+    ),
     deps = [
         ":common_headers",
         ":ncurses_impl",
@@ -450,13 +439,10 @@ cc_library(
     ] + [
         "ncurses/panel/panel.priv.h",
     ],
-    copts = COPTS + [
-        "-isystem",
+    copts = COPTS + copts_include(
         "ncurses/ncurses/panel",
-    ],
-    visibility = [
-        "//visibility:private",
-    ],
+        system = True,
+    ),
     deps = [
         ":common_headers",
         ":ncurses_impl",
@@ -477,15 +463,13 @@ cc_library(
     ) + [
         "gen/c++/etip.h",
     ],
-    copts = COPTS + [
-        "-isystem",
+    copts = COPTS + copts_include(
         "ncurses/gen/c++",
-        "-isystem",
+        system = True,
+    ) + copts_include(
         "ncurses/ncurses/c++",
-    ],
-    visibility = [
-        "//visibility:private",
-    ],
+        system = True,
+    ),
     deps = [
         ":common_headers",
         ":form_impl",
@@ -495,12 +479,13 @@ cc_library(
     ],
 )
 
-PROG_COPTS = COPTS + [
-    "-isystem",
+PROG_COPTS = COPTS + copts_include(
     "ncurses/gen/progs",
-    "-isystem",
+    system = True,
+) + copts_include(
     "ncurses/ncurses/progs",
-]
+    system = True,
+)
 
 cc_library(
     name = "progs_impl",
@@ -509,9 +494,6 @@ cc_library(
         "ncurses/progs/progs.priv.h",
     ],
     copts = PROG_COPTS,
-    visibility = [
-        "//visibility:private",
-    ],
     deps = [
         ":common_headers",
         ":ncurses_impl",
@@ -519,13 +501,16 @@ cc_library(
 )
 
 cc_binary(
-    name = "bin/infocmp",
+    name = "infocmp",
     srcs = [
         "ncurses/progs/dump_entry.c",
         "ncurses/progs/dump_entry.h",
         "ncurses/progs/infocmp.c",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
@@ -533,7 +518,7 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bin/clear",
+    name = "clear",
     srcs = [
         "ncurses/progs/clear.c",
         "ncurses/progs/clear_cmd.c",
@@ -542,6 +527,9 @@ cc_binary(
         "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
@@ -549,13 +537,16 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bin/tabs",
+    name = "tabs",
     srcs = [
         "ncurses/progs/tabs.c",
         "ncurses/progs/tty_settings.c",
         "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
@@ -563,7 +554,7 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bin/tput",
+    name = "tput",
     srcs = [
         "gen/progs/transform.h",
         "ncurses/progs/clear_cmd.c",
@@ -578,6 +569,9 @@ cc_binary(
         "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
@@ -585,7 +579,7 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bin/tset",
+    name = "tset",
     srcs = [
         "gen/progs/transform.h",
         "ncurses/progs/reset_cmd.c",
@@ -596,6 +590,9 @@ cc_binary(
         "ncurses/progs/tty_settings.h",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
@@ -603,11 +600,14 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bin/toe",
+    name = "toe",
     srcs = [
         "ncurses/progs/toe.c",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
@@ -615,7 +615,7 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bin/tic",
+    name = "tic",
     srcs = [
         "gen/progs/transform.h",
         "ncurses/progs/dump_entry.c",
@@ -626,6 +626,9 @@ cc_binary(
         "ncurses/progs/transform.c",
     ],
     copts = PROG_COPTS,
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         ":common_headers",
         ":progs_impl",
