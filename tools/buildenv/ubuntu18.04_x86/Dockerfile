@@ -1,8 +1,8 @@
-#!/usr/bin/env docker build . -t likan/buildenv:ubuntu17.10_x86 -f
+#!/usr/bin/env docker build . -t likan/buildenv:ubuntu18.04_x86 -f
 
-FROM i386/ubuntu:17.10
+FROM i386/ubuntu:18.04
 
-RUN apt update && apt update -y
+RUN apt update && apt upgrade -y
 
 RUN apt install -y autoconf \
                    autopoint \
@@ -18,7 +18,7 @@ RUN apt install -y autoconf \
                    zip
 
 RUN wget 'https://github.com/likan999/bazel-third-party/releases/download/\
-bazel-0.12.0/bazel-0.12.0-without-jdk-installer-linux-x86.sh' \
+bazel-0.13.1/bazel-0.13.1-without-jdk-installer-linux-x86.sh' \
         -O /tmp/install.sh --progress=dot:mega && \
     bash /tmp/install.sh && rm /tmp/install.sh
 

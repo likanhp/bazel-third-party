@@ -1,6 +1,6 @@
-#!/usr/bin/env docker build . -t likan/buildenv:fc26_x64 -f
+#!/usr/bin/env docker build . -t likan/buildenv:fc28_x64 -f
 
-FROM registry.fedoraproject.org/fedora:26
+FROM registry.fedoraproject.org/fedora:28
 
 RUN dnf update -y
 
