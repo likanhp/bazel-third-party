@@ -1,0 +1,11 @@
+--- mapped_file_unix.cc	1979-12-31 16:00:00.000000000 -0800
++++ mapped_file_unix.cc.patched	2018-06-10 14:30:07.000000000 -0700
+@@ -110,7 +110,7 @@
+ 
+   // Ensure that any buffer overflow in JarStripper will result in
+   // SIGSEGV or SIGBUS by over-allocating beyond the end of the file.
+-  size_t mmap_length = std::min(estimated_size + sysconf(_SC_PAGESIZE),
++  size_t mmap_length = std::min<size_t>(estimated_size + sysconf(_SC_PAGESIZE),
+                                 std::numeric_limits<size_t>::max());
+   void* mapped = mmap(NULL, mmap_length, PROT_WRITE, MAP_SHARED, fd, 0);
+   if (mapped == MAP_FAILED) {
