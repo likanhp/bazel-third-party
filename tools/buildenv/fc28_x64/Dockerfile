@@ -11,6 +11,7 @@ RUN dnf install -y autoconf \
                    gettext-devel \
                    git \
                    libtool \
+                   make \
                    pkg-config \
                    python2-pip \
                    sudo \
@@ -26,7 +27,3 @@ RUN mkdir -p /etc/sudoers.d && echo "${user} ALL=NOPASSWD: ALL" > /etc/sudoers.d
 
 USER ${user}:${user}
 WORKDIR /home/${user}
-
-ARG checkout=1
-
-RUN if [ ${checkout} -gt 0 ]; then git clone --recursive https://github.com/likanhp/bazel-third-party.git; fi

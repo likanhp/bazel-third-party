@@ -10,6 +10,7 @@ RUN apt install -y autoconf \
                    gcc \
                    git \
                    libtool \
+                   make \
                    openjdk-8-jdk \
                    pkg-config \
                    python-pip \
@@ -30,7 +31,3 @@ RUN mkdir -p /etc/sudoers.d && echo "${user} ALL=NOPASSWD: ALL" > /etc/sudoers.d
 USER ${user}:${user}
 WORKDIR /home/${user}
 ENTRYPOINT ["/usr/bin/linux32", "--"]
-
-ARG checkout=1
-
-RUN if [ ${checkout} -gt 0 ]; then git clone --recursive https://github.com/likanhp/bazel-third-party.git; fi

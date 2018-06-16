@@ -2,8 +2,10 @@
 
 set -e
 
-docker rm -f "${container_id}" >&2 || true
+docker rm -f "${_container_id}" >&2 || true
 
-echo "unset container_id scripts_dir container_homd_dir docker_entry_point;"
-echo "unset _variant _source_root _prefix _make_trace_opt _nproc;"
-echo "unset -f __buildenv_require __buildenv_export;"
+cat <<"EOF"
+unset _container_id _docker_entry_point _host_source_root;
+unset _variant _container_source_root _prefix _make_trace_opt _nproc;
+unset -f __buildenv_require __buildenv_export;
+EOF

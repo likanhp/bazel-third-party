@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker exec -it "${container_id}" ${docker_entry_point}
+docker exec -it "${_container_id}" ${_docker_entry_point}

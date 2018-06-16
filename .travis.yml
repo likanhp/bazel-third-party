@@ -51,8 +51,8 @@ script:
   - >
     if [[ "${USE_DOCKER}" == yes ]]; then
       case "${TRAVIS_OS_NAME}-${ARCH}" in
-        linux-x86) _image=likan/buildenv:ubuntu18.04_x86_travis;;
-        linux-x64) _image=likan/buildenv:fc28_x64_travis;;
+        linux-x86) _image=likan/buildenv:ubuntu18.04_x86;;
+        linux-x64) _image=likan/buildenv:fc28_x64;;
       esac
       docker run -v "${PWD}:/project" -v "${HOME}/bazel_output_base:/bazel_output_base" \
         "${_image}" bash -c "cd /project && sudo bazel --output_base=/bazel_output_base build //..."

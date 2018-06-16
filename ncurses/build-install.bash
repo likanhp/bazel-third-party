@@ -54,8 +54,5 @@ if [[ "${_stage}" == build-install ]]; then
         ln -sf "../$(basename "${header}")" "${target}"
       done
     done
-  done &&
-  cd "${_source_root}/ncurses/ncurses" &&
-  git checkout . &&
-  git clean -f -f -d .
+  done
 fi
