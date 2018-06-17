@@ -1,15 +1,23 @@
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//visibility:private"])
 
 load("@bazel_shared//tools/autoconf:autoconf.bzl", "autoconf")
+load(
+    "//tools/build_defs:cc.bzl",
+    "INCLUDE_PREFIX",
+    "copts_include",
+)
 
 COPTS = [
     "-DHAVE_CONFIG_H",
     "-DRL_LIBRARY_VERSION='\"7.0\"'",
-    "-isystem",
+] + copts_include(
     "readline",
-    "-isystem",
-    "$(GENDIR)/readline",
-]
+    system = True,
+) + copts_include(
+    "readline",
+    gendir = True,
+    system = True,
+)
 
 EXTERNAL_HEADERS = [
     "readline/chardefs.h",
@@ -77,9 +85,6 @@ cc_library(
         "readline/vi_keymap.c",
     ],
     copts = COPTS,
-    visibility = [
-        "//visibility:private",
-    ],
     deps = [
         "//ncurses:ncurses_for_third_party",
     ],
@@ -105,9 +110,6 @@ cc_library(
         "readline/vi_keymap.c",
     ],
     copts = COPTS,
-    visibility = [
-        "//visibility:private",
-    ],
     deps = [
         "//ncurses:ncurses_for_third_party",
     ],
@@ -119,7 +121,7 @@ cc_library(
             name = "%s_for_third_party" % lib,
             hdrs = EXTERNAL_HEADERS,
             includes = [
-                "readline",
+                ".",
             ],
             visibility = [
                 "//:__subpackages__",
@@ -131,7 +133,13 @@ cc_library(
         cc_library(
             name = lib,
             hdrs = EXTERNAL_HEADERS,
-            include_prefix = "readline",
+            include_prefix = INCLUDE_PREFIX,
+            includes = [
+                ".",
+            ],
+            visibility = [
+                "//visibility:public",
+            ],
             deps = [
                 ":%s_impl" % lib,
             ],
