@@ -19,3 +19,6 @@
 [submodule "icu/icu"]
 	path = icu/icu
 	url = https://github.com/likanhp/icu.git
+[submodule "openssl/openssl"]
+	path = openssl/openssl
+	url = https://github.com/openssl/openssl.git
