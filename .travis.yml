@@ -55,7 +55,8 @@ script:
         linux-x64) _image=likan/buildenv:fc28_x64;;
       esac
       docker run -v "${PWD}:/project" -v "${HOME}/bazel_output_base:/bazel_output_base" \
-        "${_image}" bash -c "cd /project && sudo bazel --output_base=/bazel_output_base build //..."
+        "${_image}" bash -c "cd /project && sudo bazel --output_base=/bazel_output_base build //... && sudo bazel --output_base=/bazel_output_base run --direct_run //:buildifier"
     else
-      bazel --output_base="${HOME}/bazel_output_base" build //...;
+      bazel --output_base="${HOME}/bazel_output_base" build //... && \
+      bazel --output_base="${HOME}/bazel_output_base" run --direct_run //:buildifier;
     fi
