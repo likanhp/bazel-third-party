@@ -40,17 +40,17 @@ def icu_cc_library(name, srcs, hdrs, deps, **kwargs):
     copts = COMMON_COPTS + copts
 
     native.cc_library(
-        name = name + "_stub",
+        name = "%s_stub" % name,
         srcs = srcs,
         hdrs = hdrs,
         copts = copts,
-        deps = [dep + "_stub" if dep in _STUB_DEPS else dep for dep in deps],
+        deps = ["%s_stub" % dep if dep in _STUB_DEPS else dep for dep in deps],
         **kwargs
     )
     native.cc_library(
-        name = name + "_impl",
+        name = "%s_impl" % name,
         srcs = srcs + hdrs,
         copts = copts,
-        deps = [dep + "_impl" if dep in _STUB_DEPS else dep for dep in deps],
+        deps = ["%s_impl" % dep if dep in _STUB_DEPS else dep for dep in deps],
         **kwargs
     )

@@ -19,6 +19,8 @@ load(
 
 DATA_TYPE_CONFIG = big_endian("b") + little_endian("l")
 
+DATA_TYPES = {v: 0 for _, v in DATA_TYPE_CONFIG.items()}.keys()
+
 cc_library(
     name = "unicode",
     hdrs = glob([
@@ -116,7 +118,7 @@ cc_binary(
     ],
     copts = COMMON_COPTS,
     deps = [
-        "unicode",
+        ":unicode",
     ],
 )
 
@@ -162,30 +164,31 @@ cc_binary(
 
 [
     genrule(
-        name = "gen_data_" + data_type,
+        name = "gen_data_%s" % data_type,
         srcs = [
             "gen/data_l.dat",
         ],
         outs = [
-            "gen/data_" + data_type + ".dat",
+            "gen/data_%s.dat" % data_type,
         ],
         cmd = "$(location :icupkg) --auto_toc_prefix_with_type  -t" + select(DATA_TYPE_CONFIG) + " $< $@",
         tools = [
             ":icupkg",
         ],
     )
-    for data_type in ("b", "e")
+    for data_type in DATA_TYPES
+    if data_type != "l"
 ]
 
 [
     (
         genrule(
-            name = "gen_data_lib_cc_" + data_type,
+            name = "gen_data_lib_cc_%s" % data_type,
             srcs = [
-                "gen/data_" + data_type + ".dat",
+                "gen/data_%s.dat" % data_type,
             ],
             outs = [
-                "gen/data_" + data_type + ".cc",
+                "gen/data_%s.cc" % data_type,
             ],
             cmd = "$(location :generate_data_library) <$< >$@",
             tools = [
@@ -193,17 +196,13 @@ cc_binary(
             ],
         ),
         cc_library(
-            name = "data_" + data_type,
+            name = "data_%s" % data_type,
             srcs = [
-                "gen/data_" + data_type + ".cc",
+                "gen/data_%s.cc" % data_type,
             ],
         ),
     )
-    for data_type in [
-        "l",
-        "b",
-        "e",
-    ]
+    for data_type in DATA_TYPES
 ]
 
 [
