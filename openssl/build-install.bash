@@ -5,7 +5,6 @@ if [[ "${_stage}" == deps ]]; then
 else
   mkdir -p "${_export_build_root}" &&
   cd "${_export_build_root}" &&
-  cd "${_source_root}/openssl/openssl" &&
   "${_source_root}/openssl/openssl/config" \
     --prefix="${_prefix}" \
     no-shared \
